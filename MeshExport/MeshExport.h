@@ -73,7 +73,7 @@ namespace Liar
 		std::string& GetExportPathName() { return m_szExportPath; };
 
 	private:
-		void ClearAll();
+		void EraseIndex(int);
 	};
 
 	class MeshExportClassDesc : public ClassDesc2

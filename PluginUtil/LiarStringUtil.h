@@ -35,6 +35,16 @@ namespace Liar
 			}
 		}
 
+		static void GetHeadAndLast(const std::string& name, std::string& head, std::string& last, const char* split = ".")
+		{
+			std::string::size_type pos = name.find_last_of(split);
+			if (pos != std::string::npos)
+			{
+				head = name.substr(0, pos);
+				last = name.substr(pos + 1);
+			}
+		}
+
 		static void GetWSTR2Char(const WStr& name, std::string& out)
 		{
 			char tmpName[_MAX_PATH];
@@ -52,6 +62,15 @@ namespace Liar
 			char tmpName[_MAX_PATH];
 			wcstombs_s(&converted, tmpName, len, name, _TRUNCATE);
 			out = tmpName;
+		}
+
+		static void WChar_tToString(const wchar_t* wchar, std::string& out)
+		{
+			DWORD dwNum = WideCharToMultiByte(CP_OEMCP, NULL, wchar, -1, NULL, 0, NULL, FALSE);
+			char *psText = new char[dwNum];
+			WideCharToMultiByte(CP_OEMCP, NULL, wchar, -1, psText, dwNum, NULL, FALSE);
+			out = psText;
+			delete[] psText;
 		}
 	};
 }

@@ -1,11 +1,15 @@
 #pragma once
 
+#include <iparamm2.h>
 #include <iparamb2.h>
+#include <stdmat.h>
 //SIMPLE TYPE
 
-#include "SubMaterial.h"
-
 #include <vector>
+
+#include <LiarStringUtil.h>
+
+#include "SubMaterial.h"
 
 namespace Liar
 {
@@ -16,9 +20,16 @@ namespace Liar
 		LiarTexture();
 		~LiarTexture();
 
+	private:
+		int m_index;
+		std::string m_fileName;
+		BitmapTex* m_bmtPtr;
+
 	public:
-		int index;
-		std::string fileName;
+		void SetIndex(int v) { m_index = v; };
+		void SetName(const std::string& v) { m_fileName = v; };
+		void SetBmtPtr(BitmapTex*);
+		std::string& GetName() { return m_fileName; };
 	};
 
 	class SubMaterial
@@ -38,6 +49,9 @@ namespace Liar
 		BOOL SubTextureEnum(MtlBase*, int& size);
 		void SetName(const std::string& v) { m_name = v; };
 		std::string& GetName() { return m_name; };
+
+	private:
+		void EraseIndex(int);
 	};
 
 }

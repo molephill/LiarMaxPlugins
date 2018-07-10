@@ -108,7 +108,7 @@ namespace Liar
 
 		if (scenemats)
 		{
-			char	tText[200];
+			char tText[200];
 			int tCount = scenemats->Count();
 
 			sprintf(tText, "共有材质%d个", tCount);
@@ -116,44 +116,50 @@ namespace Liar
 
 			if (tCount > 0)
 			{
-				ClearAll();
 				//取得材质数量
 				int matrialSize = 0;
 				for (int i = 0; i < tCount; i++)
 				{
-					MtlBase * vMtl = (*scenemats)[i];
+					MtlBase* vMtl = (*scenemats)[i];
 					if (IsMtl(vMtl))
 					{
 						Liar::SubMaterial* pParseMaterial = nullptr;
 						if (matrialSize >= m_materialSize)
 						{
 							pParseMaterial = new Liar::SubMaterial();
+							m_allMaterials->push_back(pParseMaterial);
 						}
 						else
 						{
 							pParseMaterial = m_allMaterials->at(i);
 						}
-						memset(pParseMaterial, 0, sizeof(SubMaterial));
+						//memset(pParseMaterial, 0, sizeof(SubMaterial));
 
 						pParseMaterial->SetID(matrialSize++);
 						Liar::StringUtil::GetWSTR2Char(vMtl->GetName(), pParseMaterial->GetName());
 						
 						////遍历材质所用的贴图
 						pParseMaterial->SubTextureEnum(vMtl, matrialSize);
-						m_allMaterials->push_back(pParseMaterial);
 					}
 				}
-
-				m_materialSize = matrialSize;
+				EraseIndex(tCount);
+				m_materialSize = tCount;
 			}
 		}
 
 		return 0;
 	}
 
-	void MeshExport::ClearAll()
+	void MeshExport::EraseIndex(int index)
 	{
+		for (std::vector<Liar::SubMaterial*>::iterator it = m_allMaterials->begin() + index; it != m_allMaterials->end();)
+		{
+			delete *it;
+			it = m_allMaterials->erase(it);
+			++it;
+		}
 	}
+
 // ==================================== self =====================================
 
 	int MeshExport::ExtCount()
