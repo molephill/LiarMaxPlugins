@@ -21,6 +21,9 @@
     <ClCompile Include="DllEntry.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SubMaterial.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="MeshExport.def">
@@ -35,6 +38,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SubMaterial.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\PluginUtil\LiarStringUtil.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

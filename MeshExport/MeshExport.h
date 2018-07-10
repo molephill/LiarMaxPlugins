@@ -24,6 +24,10 @@
 
 
 #include <impexp.h>
+#include <vector>
+
+#include "SubMaterial.h"
+#include <LiarStringUtil.h>
 
 
 extern TCHAR *GetString(int id);
@@ -55,7 +59,21 @@ namespace Liar
 		int  DoExport(const TCHAR *name, ExpInterface *ei, Interface *i, BOOL suppressPrompts = FALSE, DWORD options = 0);
 
 	private:
-		ExpInterface * m_pExpInterface;
+		ExpInterface*	m_pExpInterface;				// 导出插件接口指针
+		Interface*		m_pInterface;					// 3ds max 接口指针
+		BOOL			m_exportSelect;					// 是否只导出选择项
+		std::string		m_szExportPath;		// 导出目录
+
+		// ============== 存储 ===============
+		std::vector<Liar::SubMaterial*>* m_allMaterials;
+		int m_materialSize;
+
+	public:
+		int ExportMesh(const char* szMeshName);
+		std::string& GetExportPathName() { return m_szExportPath; };
+
+	private:
+		void ClearAll();
 	};
 
 	class MeshExportClassDesc : public ClassDesc2
@@ -70,8 +88,6 @@ namespace Liar
 
 		virtual const TCHAR* InternalName() { return _T("MeshExport"); }	// returns fixed parsable name (scripter-visible name)
 		virtual HINSTANCE HInstance() { return hInstance; }					// returns owning module handle
-
-
 	};
 }
 
