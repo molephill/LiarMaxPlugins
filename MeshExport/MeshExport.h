@@ -16,17 +16,11 @@
 
 #include "3dsmaxsdk_preinclude.h"
 #include "resource.h"
-#include <istdplug.h>
-#include <iparamb2.h>
 #include <iparamm2.h>
-#include <maxtypes.h>
+#include <iparamb2.h>
+#include <stdmat.h>
 //SIMPLE TYPE
 
-
-#include <impexp.h>
-#include <vector>
-
-#include "SubMaterial.h"
 #include <LiarStringUtil.h>
 
 
@@ -38,6 +32,8 @@ extern HINSTANCE hInstance;
 
 namespace Liar
 {
+	class LiarMeshParse;
+
 	class MeshExport : public SceneExport {
 	public:
 		//Constructor/Destructor
@@ -59,21 +55,11 @@ namespace Liar
 		int  DoExport(const TCHAR *name, ExpInterface *ei, Interface *i, BOOL suppressPrompts = FALSE, DWORD options = 0);
 
 	private:
-		ExpInterface*	m_pExpInterface;				// 导出插件接口指针
-		Interface*		m_pInterface;					// 3ds max 接口指针
-		BOOL			m_exportSelect;					// 是否只导出选择项
-		std::string		m_szExportPath;		// 导出目录
-
-		// ============== 存储 ===============
-		std::vector<Liar::SubMaterial*>* m_allMaterials;
-		int m_materialSize;
+		LiarMeshParse* m_meshParse;
 
 	public:
 		int ExportMesh(const char* szMeshName);
-		std::string& GetExportPathName() { return m_szExportPath; };
-
-	private:
-		void EraseIndex(int);
+		LiarMeshParse* GetMeshExport() { return m_meshParse; };
 	};
 
 	class MeshExportClassDesc : public ClassDesc2

@@ -1,6 +1,10 @@
-e:\c++\liarmaxplugins\meshexport\obj\x64\debug\submaterial.obj
-e:\c++\liarmaxplugins\meshexport\obj\x64\debug\dllentry.obj
 e:\c++\liarmaxplugins\meshexport\obj\x64\debug\meshexport.obj
+e:\c++\liarmaxplugins\meshexport\obj\x64\debug\liarmeshparse.obj
+e:\c++\liarmaxplugins\meshexport\obj\x64\debug\dllentry.obj
+e:\c++\liarmaxplugins\meshexport\obj\x64\debug\liarvertexbuffer.obj
+e:\c++\liarmaxplugins\meshexport\obj\x64\debug\liarnodeparse.obj
+e:\c++\liarmaxplugins\meshexport\obj\x64\debug\liarmesh.obj
+e:\c++\liarmaxplugins\meshexport\obj\x64\debug\liarmaterialparse.obj
 e:\c++\liarmaxplugins\meshexport\obj\x64\debug\vc140.pdb
 d:\inittools\3dmax2019\3ds max 2019\plugins\meshexport.ilk
 d:\inittools\3dmax2019\3ds max 2019\plugins\meshexport.dle

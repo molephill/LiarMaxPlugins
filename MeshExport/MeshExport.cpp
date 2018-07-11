@@ -13,6 +13,7 @@
 //***************************************************************************/
 
 #include "MeshExport.h"
+#include "LiarMeshParse.h"
 
 // =========================================== self ======================================
 // 列表框句柄
@@ -21,7 +22,7 @@ void AddStrToOutPutListBox(const char* szText)
 {
 	if (G_hListBox)
 	{
-		SendMessage(G_hListBox, LB_ADDSTRING, 0, (LPARAM)szText);
+		SendMessageA(G_hListBox, LB_ADDSTRING, 0, (LPARAM)szText);
 	}
 }
 
@@ -42,7 +43,7 @@ INT_PTR CALLBACK MeshExportOptionsDlgProc(HWND hWnd,UINT message,WPARAM wParam,L
 				G_hListBox = ::GetDlgItem(hWnd, IDC_LIST_EXPORT_INFO);
 
 				
-				std::string strFileName = Liar::StringUtil::GetLast(imp->GetExportPathName());
+				std::string strFileName = Liar::StringUtil::GetLast(imp->GetMeshExport()->GetExportPathName());
 				//去掉扩展名
 				std::string strFileName_NoExt = Liar::StringUtil::GetHead(strFileName);
 				//将字符串设为模型名
@@ -87,77 +88,27 @@ INT_PTR CALLBACK MeshExportOptionsDlgProc(HWND hWnd,UINT message,WPARAM wParam,L
 //--- MeshExport -------------------------------------------------------
 namespace Liar
 {
-	MeshExport::MeshExport():
-		m_pExpInterface(nullptr), m_pInterface(nullptr)
-		, m_exportSelect(false), m_szExportPath("")
-		, m_materialSize(0)
+	MeshExport::MeshExport():m_meshParse(new Liar::LiarMeshParse())
 	{
-		m_allMaterials = new std::vector<Liar::SubMaterial*>();
 	}
 
 	MeshExport::~MeshExport()
 	{
-
+		delete m_meshParse;
 	}
 
 // ==================================== self =====================================
 	int MeshExport::ExportMesh(const char* szName)
 	{
-		//通过m_pInterface取得场景中的材质库
-		MtlBaseLib * scenemats = m_pInterface->GetSceneMtls();
-
-		if (scenemats)
-		{
-			char tText[200];
-			int tCount = scenemats->Count();
-
-			sprintf(tText, "共有材质%d个", tCount);
-			AddStrToOutPutListBox(tText);
-
-			if (tCount > 0)
-			{
-				//取得材质数量
-				int matrialSize = 0;
-				for (int i = 0; i < tCount; i++)
-				{
-					MtlBase* vMtl = (*scenemats)[i];
-					if (IsMtl(vMtl))
-					{
-						Liar::SubMaterial* pParseMaterial = nullptr;
-						if (matrialSize >= m_materialSize)
-						{
-							pParseMaterial = new Liar::SubMaterial();
-							m_allMaterials->push_back(pParseMaterial);
-						}
-						else
-						{
-							pParseMaterial = m_allMaterials->at(i);
-						}
-						//memset(pParseMaterial, 0, sizeof(SubMaterial));
-
-						pParseMaterial->SetID(matrialSize++);
-						Liar::StringUtil::GetWSTR2Char(vMtl->GetName(), pParseMaterial->GetName());
-						
-						////遍历材质所用的贴图
-						pParseMaterial->SubTextureEnum(vMtl, matrialSize);
-					}
-				}
-				EraseIndex(tCount);
-				m_materialSize = tCount;
-			}
-		}
+		// =============== 解析材质 ==================
+		int matrialCount = m_meshParse->ParseMatrial();
+		char tText[512];
+		sprintf(tText, "共有材质%d个", matrialCount);
+		AddStrToOutPutListBox(tText);
+		
+		m_meshParse->ParseNode();
 
 		return 0;
-	}
-
-	void MeshExport::EraseIndex(int index)
-	{
-		for (std::vector<Liar::SubMaterial*>::iterator it = m_allMaterials->begin() + index; it != m_allMaterials->end();)
-		{
-			delete *it;
-			it = m_allMaterials->erase(it);
-			++it;
-		}
 	}
 
 // ==================================== self =====================================
@@ -232,12 +183,7 @@ namespace Liar
 	{
 		#pragma message(TODO("Implement the actual file Export here and"))
 
-		// 保存变量
-		Liar::StringUtil::GetTChar2Char(name, m_szExportPath);
-
-		m_pExpInterface = ei;
-		m_pInterface = ip;
-		m_exportSelect = (options & SCENE_EXPORT_SELECTED);
+		m_meshParse->SetControl(name, ei, ip, suppressPrompts, options);
 
 		if (!suppressPrompts)
 			DialogBoxParam(hInstance,
