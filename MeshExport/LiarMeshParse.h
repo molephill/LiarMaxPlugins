@@ -39,8 +39,10 @@ namespace Liar
 	public:
 		Interface* GetInterface() { return m_pInterface; };
 		ExpInterface* GetExpInterface() { return m_pExpInterface; };
+		int GetMeshSize() const { return m_meshSize; };
 
-		Liar::LiarMesh* GetMesh(int&);
+		Liar::LiarMesh* GetOrNewMesh(int&);
+		Liar::LiarMesh* GetMesh(int);
 	};
 }
 

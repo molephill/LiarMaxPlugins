@@ -15,10 +15,10 @@ namespace Liar
 	LiarGeometry::~LiarGeometry()
 	{
 		EraseIndexBuff(0);
-		m_allVertexBuffers->clear();
+		std::vector<Liar::LiarVertexBuffer*>().swap(*m_allVertexBuffers);
 		delete m_allVertexBuffers;
 
-		m_indices->clear();
+		std::vector<int>().swap(*m_indices);
 		delete m_indices;
 	}
 
@@ -28,7 +28,6 @@ namespace Liar
 		{
 			delete *it;
 			it = m_allVertexBuffers->erase(it);
-			++it;
 			--m_bufferSize;
 		}
 	}
@@ -36,7 +35,6 @@ namespace Liar
 #ifdef PLUGINS
 	void LiarGeometry::ParseNode(Mesh* mesh)
 	{
-		m_indices->clear();
 		std::vector<int>().swap(*m_indices);
 
 		ParseVertexData(mesh);
@@ -65,6 +63,16 @@ namespace Liar
 		}
 
 		EraseIndexBuff(tVertexNum);
+
+		int tFaceNum = mesh->getNumFaces();
+		for (int i = 0; i < tFaceNum; ++i)
+		{
+			//将三角面索引信息保存到容器中。
+			m_indices->push_back(mesh->faces[i].v[0]);
+			m_indices->push_back(mesh->faces[i].v[1]);
+			m_indices->push_back(mesh->faces[i].v[2]);
+		}
+
 	}
 
 	// =============== 顶点颜色 ====================
@@ -144,23 +152,6 @@ namespace Liar
 
 				buff3->u = mesh->tVerts[tSrcTexIndex3].x;
 				buff3->v = 1.0 - mesh->tVerts[tSrcTexIndex3].y;
-
-				//将三角面索引信息保存到容器中。
-				m_indices->push_back(mesh->faces[i].v[0]);
-				m_indices->push_back(mesh->faces[i].v[1]);
-				m_indices->push_back(mesh->faces[i].v[2]);
-
-			}
-		}
-		else
-		{
-			// 导出面数
-			for (int i = 0; i < tFaceNum; i++)
-			{
-				//将三角面索引信息保存到容器中。
-				m_indices->push_back(mesh->faces[i].v[0]);
-				m_indices->push_back(mesh->faces[i].v[1]);
-				m_indices->push_back(mesh->faces[i].v[2]);
 			}
 		}
 	}
@@ -186,6 +177,9 @@ namespace Liar
 	{
 		ctrNode = node;
 		Liar::StringUtil::WChar_tToString(node->GetName(), nodeName);
+
+		faceNum = mesh->getNumFaces();
+		vertexNum = mesh->getNumVerts();
 
 		// 取得模型对应的材质。
 		Mtl* nodemtl = node->GetMtl();

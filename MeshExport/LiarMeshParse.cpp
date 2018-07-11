@@ -14,9 +14,11 @@ namespace Liar
 	LiarMeshParse::~LiarMeshParse()
 	{
 		EraseMatrialIndex(0);
+		std::vector<Liar::LiarMaterialParse*>().swap(*m_allMaterials);
 		delete m_allMaterials;
 
 		EraseMeshIndex(0);
+		std::vector<Liar::LiarMesh*>().swap(*m_allMeshs);
 		delete m_allMeshs;
 	}
 
@@ -97,7 +99,7 @@ namespace Liar
 		return 0;
 	}
 
-	Liar::LiarMesh* LiarMeshParse::GetMesh(int& index)
+	Liar::LiarMesh* LiarMeshParse::GetOrNewMesh(int& index)
 	{
 		Liar::LiarMesh* mesh = nullptr;
 		if (index >= m_meshSize)
@@ -111,6 +113,18 @@ namespace Liar
 			mesh = m_allMeshs->at(index);
 		}
 		return mesh;
+	}
+
+	Liar::LiarMesh* LiarMeshParse::GetMesh(int index)
+	{
+		if (index >= m_meshSize)
+		{
+			return nullptr;
+		}
+		else
+		{
+			return m_allMeshs->at(index);
+		}
 	}
 
 	// ==================== 释放多余的数组 =================

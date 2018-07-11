@@ -1,15 +1,22 @@
 ﻿  MeshExport.cpp
+e:\c++\liarmaxplugins\meshexport\meshexport.cpp(117): warning C4477: “sprintf”: 格式字符串“%s”需要类型“char *”的参数，但可变参数 1 拥有了类型“const wchar_t *”
+  e:\c++\liarmaxplugins\meshexport\meshexport.cpp(117): note: 请考虑在格式字符串中使用“%ls”
+  e:\c++\liarmaxplugins\meshexport\meshexport.cpp(117): note: 请考虑在格式字符串中使用“%lls”
+  e:\c++\liarmaxplugins\meshexport\meshexport.cpp(117): note: 请考虑在格式字符串中使用“%Ls”
+  e:\c++\liarmaxplugins\meshexport\meshexport.cpp(117): note: 请考虑在格式字符串中使用“%ws”
+e:\c++\liarmaxplugins\meshexport\meshexport.cpp(119): warning C4477: “sprintf”: 格式字符串“%s”需要类型“char *”的参数，但可变参数 1 拥有了类型“std::string”
+e:\c++\liarmaxplugins\meshexport\meshexport.cpp(121): warning C4477: “sprintf”: 格式字符串“%s”需要类型“char *”的参数，但可变参数 1 拥有了类型“std::string”
 e:\c++\liarmaxplugins\meshexport\meshexport.cpp(101): warning C4100: “szName”: 未引用的形参
-  e:\c++\liarmaxplugins\meshexport\meshexport.cpp(118): TODO: Returns the number of file name extensions supported by the plug-in.
-  e:\c++\liarmaxplugins\meshexport\meshexport.cpp(124): TODO: Return the 'i-th' file name extension (i.e. "3DS").
-  e:\c++\liarmaxplugins\meshexport\meshexport.cpp(130): TODO: Return long ASCII description (i.e. "Targa 2.0 Image File")
-  e:\c++\liarmaxplugins\meshexport\meshexport.cpp(136): TODO: Return short ASCII description (i.e. "Targa")
-  e:\c++\liarmaxplugins\meshexport\meshexport.cpp(142): TODO: Return ASCII Author name
-  e:\c++\liarmaxplugins\meshexport\meshexport.cpp(148): TODO: Return ASCII Copyright message
-  e:\c++\liarmaxplugins\meshexport\meshexport.cpp(166): TODO: Return Version number * 100 (i.e. v3.01 = 301)
-  e:\c++\liarmaxplugins\meshexport\meshexport.cpp(177): TODO: Decide which options to support.  Simply return true for each option supported by each Extension the exporter supports.
-  e:\c++\liarmaxplugins\meshexport\meshexport.cpp(184): TODO: Implement the actual file Export here and
-  e:\c++\liarmaxplugins\meshexport\meshexport.cpp(194): TODO: return TRUE If the file is exported properly
+  e:\c++\liarmaxplugins\meshexport\meshexport.cpp(133): TODO: Returns the number of file name extensions supported by the plug-in.
+  e:\c++\liarmaxplugins\meshexport\meshexport.cpp(139): TODO: Return the 'i-th' file name extension (i.e. "3DS").
+  e:\c++\liarmaxplugins\meshexport\meshexport.cpp(145): TODO: Return long ASCII description (i.e. "Targa 2.0 Image File")
+  e:\c++\liarmaxplugins\meshexport\meshexport.cpp(151): TODO: Return short ASCII description (i.e. "Targa")
+  e:\c++\liarmaxplugins\meshexport\meshexport.cpp(157): TODO: Return ASCII Author name
+  e:\c++\liarmaxplugins\meshexport\meshexport.cpp(163): TODO: Return ASCII Copyright message
+  e:\c++\liarmaxplugins\meshexport\meshexport.cpp(181): TODO: Return Version number * 100 (i.e. v3.01 = 301)
+  e:\c++\liarmaxplugins\meshexport\meshexport.cpp(192): TODO: Decide which options to support.  Simply return true for each option supported by each Extension the exporter supports.
+  e:\c++\liarmaxplugins\meshexport\meshexport.cpp(199): TODO: Implement the actual file Export here and
+  e:\c++\liarmaxplugins\meshexport\meshexport.cpp(209): TODO: return TRUE If the file is exported properly
   LINK : 没有找到 D:\InitTools\3DMax2019\3ds Max 2019\Plugins\MeshExport.dle 或上一个增量链接没有生成它；正在执行完全链接
     正在创建库 E:\c++\LiarMaxPlugins\MeshExport\\obj\x64\Debug\\MeshExport.lib 和对象 E:\c++\LiarMaxPlugins\MeshExport\\obj\x64\Debug\\MeshExport.exp
   MeshExport.vcxproj -> D:\InitTools\3DMax2019\3ds Max 2019\Plugins\MeshExport.dle

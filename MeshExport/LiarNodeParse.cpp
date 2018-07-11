@@ -96,7 +96,7 @@ namespace Liar
 					/*sprintf(tText, "模型<%s> 顶点数 :<%d> 面数:<%d>", node->GetName(), mesh->getNumVerts(), mesh->getNumFaces());
 					AddStrToOutPutListBox(tText);*/
 
-					Liar::LiarMesh* liarMesh = ctr->GetMesh(index);
+					Liar::LiarMesh* liarMesh = ctr->GetOrNewMesh(index);
 					liarMesh->ParseNode(node, mesh);
 
 					

@@ -51,13 +51,8 @@ namespace Liar
 
 	LiarMaterialParse::~LiarMaterialParse()
 	{
-		for (std::vector<Liar::LiarTextureParse*>::iterator it = m_allTextures->begin(); it != m_allTextures->end(); it++)
-		if (*it)
-		{
-			delete *it;
-			*it = NULL;
-		}
-		m_allTextures->clear();
+		EraseIndex(0);
+		std::vector<Liar::LiarTextureParse*>().swap(*m_allTextures);
 		delete m_allTextures;
 	}
 
@@ -101,7 +96,7 @@ namespace Liar
 		for (std::vector<Liar::LiarTextureParse*>::iterator it = m_allTextures->begin() + index; it != m_allTextures->end();)
 		{
 			delete *it;
-			m_allTextures->erase(it);
+			it = m_allTextures->erase(it);
 			--m_textureSize;
 		}
 	}

@@ -108,6 +108,21 @@ namespace Liar
 		
 		m_meshParse->ParseNode();
 
+		int meshSize = m_meshParse->GetMeshSize();
+		for (int i = 0; i < meshSize; ++i)
+		{
+			Liar::LiarMesh* mesh = m_meshParse->GetMesh(i);
+			if (mesh)
+			{
+				sprintf(tText, "导出对象<%s>.............", mesh->ctrNode->GetName());
+				AddStrToOutPutListBox(tText);
+				sprintf(tText, "对应材质<%s>", mesh->GetMaterialName());
+				AddStrToOutPutListBox(tText);
+				sprintf(tText, "模型<%s> 顶点数 :<%d> 面数:<%d>", mesh->nodeName, mesh->vertexNum, mesh->faceNum);
+				AddStrToOutPutListBox(tText);
+			}
+		}
+
 		return 0;
 	}
 

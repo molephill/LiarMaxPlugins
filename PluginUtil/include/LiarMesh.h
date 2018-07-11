@@ -51,10 +51,12 @@ namespace Liar
 		std::string m_materialName;
 		Liar::LiarGeometry* m_geometry;
 
-#ifdef PLUGINS
 	public:
-		INode* ctrNode;
 		std::string nodeName;
+#ifdef PLUGINS
+		INode* ctrNode;
+		int vertexNum;
+		int faceNum;
 #endif // !PLUGINS
 
 
