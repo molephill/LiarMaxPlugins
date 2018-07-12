@@ -45,7 +45,6 @@ namespace Liar
 		m_textureSize(0)
 	{
 		m_allTextures = new std::vector<Liar::LiarTextureParse*>();
-		m_textureSize = 0;
 	}
 
 

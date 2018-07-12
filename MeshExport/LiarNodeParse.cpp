@@ -93,9 +93,6 @@ namespace Liar
 					//重建法线后要调用一下checkNormals检查法线。
 					mesh->checkNormals(TRUE);
 
-					/*sprintf(tText, "模型<%s> 顶点数 :<%d> 面数:<%d>", node->GetName(), mesh->getNumVerts(), mesh->getNumFaces());
-					AddStrToOutPutListBox(tText);*/
-
 					Liar::LiarMesh* liarMesh = ctr->GetOrNewMesh(index);
 					liarMesh->ParseNode(node, mesh);
 
