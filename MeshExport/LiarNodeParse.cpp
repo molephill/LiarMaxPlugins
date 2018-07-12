@@ -14,19 +14,19 @@ namespace Liar
 		delete m_maxView;
 	}
 
-	void LiarNodeParse::ParseNode(INode* node, Liar::LiarMeshParse* ctr, int& index)
+	void LiarNodeParse::ParseNode(INode* node, Liar::LiarMeshParse* ctr, int& index, bool zy)
 	{
 		// 先把自己的解析
-		ParseSubNode(node, ctr, index);
+		ParseSubNode(node, ctr, index, zy);
 
 		int numChild = node->NumberOfChildren();
 		for (int i = 0; i < numChild; ++i)
 		{
-			ParseSubNode(node->GetChildNode(i), ctr, index);
+			ParseSubNode(node->GetChildNode(i), ctr, index, zy);
 		}
 	}
 
-	void LiarNodeParse::ParseSubNode(INode* node, Liar::LiarMeshParse* ctr, int& index)
+	void LiarNodeParse::ParseSubNode(INode* node, Liar::LiarMeshParse* ctr, int& index, bool zy)
 	{
 		// 取得0帧时的物体
 		TimeValue tTime = 0;
@@ -46,7 +46,7 @@ namespace Liar
 			case SHAPE_CLASS_ID:
 				//网格模型
 			case GEOMOBJECT_CLASS_ID:
-				ParseGeometry(node, ctr, index);
+				ParseGeometry(node, ctr, index, zy);
 				break;
 			default:
 				break;
@@ -54,7 +54,7 @@ namespace Liar
 		}
 	}
 
-	void LiarNodeParse::ParseGeometry(INode* node, Liar::LiarMeshParse* ctr, int& index)
+	void LiarNodeParse::ParseGeometry(INode* node, Liar::LiarMeshParse* ctr, int& index, bool zy)
 	{
 		//获取渲染对象
 		TimeValue tTime = 0;
@@ -94,7 +94,7 @@ namespace Liar
 					mesh->checkNormals(TRUE);
 
 					Liar::LiarMesh* liarMesh = ctr->GetOrNewMesh(index);
-					ctr->ParseLiarMesh(liarMesh, node, mesh);
+					ctr->ParseLiarMesh(liarMesh, node, mesh, zy);
 					
 					//如果在转换时有新的渲染模型生成，在这里进行释放。
 					if (delMesh)

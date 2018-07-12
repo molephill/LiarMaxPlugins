@@ -23,7 +23,7 @@ namespace Liar
 
 	public:
 		void SetControl(const TCHAR* name, ExpInterface* ei, Interface* ip, BOOL suppressPrompts, DWORD options);
-		int ParseNode();
+		int ParseNode(bool zy = true);
 
 		std::string& GetExportPathName() { return m_szExportPath; };
 
@@ -39,17 +39,17 @@ namespace Liar
 		Liar::LiarMesh* GetMesh(int);
 
 	private:
-		void ParseLiarGeometry(Liar::LiarGeometry*, Mesh*);
-		void ParseLiarGeometryBuffers(Liar::LiarGeometry*, Mesh*);
+		void ParseLiarGeometry(Liar::LiarGeometry*, Mesh*, bool zy = true);
+		void ParseLiarGeometryBuffers(Liar::LiarGeometry*, Mesh*, bool zy = true);
 		void ParseLiarVertexBuffer(Liar::LiarVertexBuffer*, Mesh*, int, bool zy = true);
-		void ParseLiarGeometryColor(Liar::LiarGeometry*, Mesh*);
-		void ParseLiarGeometryUV(Liar::LiarGeometry*, Mesh*);
+		void ParseLiarGeometryColor(Liar::LiarGeometry*, Mesh*, bool zy = true);
+		void ParseLiarGeometryUV(Liar::LiarGeometry*, Mesh*, bool dv = true);
 
-		void ParseLiarMaterial(Liar::LiarMaterial*, INode*);
+		void ParseLiarMaterial(Liar::LiarMaterial*, INode*, BOOL backFace = FALSE);
 		void ParseLiarTexture(Liar::LiarTexture*, Mtl*, int, BOOL backFace = FALSE);
 
 	public:
-		void ParseLiarMesh(Liar::LiarMesh*, INode*, Mesh*);
+		void ParseLiarMesh(Liar::LiarMesh*, INode*, Mesh*, bool zy = true);
 
 	};
 }

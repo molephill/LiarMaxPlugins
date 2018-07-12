@@ -27,10 +27,10 @@ namespace Liar
 		CMaxNullView* m_maxView;
 
 	public:
-		void ParseNode(INode*, LiarMeshParse*, int&);
+		void ParseNode(INode*, LiarMeshParse*, int&, bool zy = true);
 
 	private:
-		void ParseSubNode(INode*, LiarMeshParse*, int&);
-		void ParseGeometry(INode*, LiarMeshParse*, int&);
+		void ParseSubNode(INode*, LiarMeshParse*, int&, bool zy = true);
+		void ParseGeometry(INode*, LiarMeshParse*, int&, bool zy = true);
 	};
 }

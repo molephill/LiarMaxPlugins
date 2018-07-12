@@ -28,7 +28,7 @@ namespace Liar
 	}
 
 	// ==================== 解析节点 =======================
-	int LiarMeshParse::ParseNode()
+	int LiarMeshParse::ParseNode(bool zy)
 	{
 		int numChildren = m_pInterface->GetRootNode()->NumberOfChildren();
 		if (numChildren > 0)
@@ -42,7 +42,7 @@ namespace Liar
 				INode* node = m_pInterface->GetRootNode()->GetChildNode(idx);
 				if (!node) continue;
 
-				meshNodeParse->ParseNode(node, this, curMeshIndex);
+				meshNodeParse->ParseNode(node, this, curMeshIndex, zy);
 			}
 			EraseMeshIndex(curMeshIndex);
 			delete meshNodeParse;
@@ -91,26 +91,26 @@ namespace Liar
 
 
 	// ========================= 解析要用到的结构 ==========================
-	void LiarMeshParse::ParseLiarMesh(Liar::LiarMesh* lmesh, INode* node, Mesh* mesh)
+	void LiarMeshParse::ParseLiarMesh(Liar::LiarMesh* lmesh, INode* node, Mesh* mesh, bool zy)
 	{
 		Liar::StringUtil::WChar_tToString(node->GetName(), lmesh->nodeName);
 
 		lmesh->faceNum = mesh->getNumFaces();
 		lmesh->vertexNum = mesh->getNumVerts();
 
-		ParseLiarGeometry(lmesh->GetGeo(), mesh);
+		ParseLiarGeometry(lmesh->GetGeo(), mesh, zy);
 		ParseLiarMaterial(lmesh->GetMat(), node);
 	}
 
-	void LiarMeshParse::ParseLiarGeometry(Liar::LiarGeometry* geo, Mesh* mesh)
+	void LiarMeshParse::ParseLiarGeometry(Liar::LiarGeometry* geo, Mesh* mesh, bool zy)
 	{
 		std::vector<unsigned int>().swap(*(geo->GetIndices()));
-		ParseLiarGeometryBuffers(geo, mesh);
-		ParseLiarGeometryColor(geo, mesh);
-		ParseLiarGeometryUV(geo, mesh);
+		ParseLiarGeometryBuffers(geo, mesh, zy);
+		ParseLiarGeometryColor(geo, mesh, zy);
+		ParseLiarGeometryUV(geo, mesh, zy);
 	}
 
-	void LiarMeshParse::ParseLiarGeometryBuffers(Liar::LiarGeometry* geo, Mesh* mesh)
+	void LiarMeshParse::ParseLiarGeometryBuffers(Liar::LiarGeometry* geo, Mesh* mesh, bool zy)
 	{
 		int tVertexNum = mesh->getNumVerts();
 		for (int i = 0; i < tVertexNum; ++i)
@@ -128,7 +128,7 @@ namespace Liar
 				buff = geo->GetBuffes()->at(i);
 			}
 
-			ParseLiarVertexBuffer(buff, mesh, i);
+			ParseLiarVertexBuffer(buff, mesh, i, zy);
 		}
 
 		geo->EraseIndexBuff(tVertexNum);
@@ -150,7 +150,7 @@ namespace Liar
 		Liar::LiarStructUtil::ParsePoint3(buff->normal, mesh->getNormal(index), zy);
 	}
 
-	void LiarMeshParse::ParseLiarGeometryColor(Liar::LiarGeometry* geo, Mesh* mesh)
+	void LiarMeshParse::ParseLiarGeometryColor(Liar::LiarGeometry* geo, Mesh* mesh, bool zy)
 	{
 		//获取顶点色信息
 		//如果有顶点有色彩赋值。
@@ -173,18 +173,18 @@ namespace Liar
 
 				//将色彩数组vertCol中对应三角面各顶点色彩的值赋值给相应的顶点。
 				Liar::LiarVertexBuffer* buff1 = geo->GetBuffes()->at(tDestColorIndex1);
-				Liar::LiarStructUtil::ParsePoint3(buff1->color, mesh->vertCol[tSrcColorIndex1], true);
+				Liar::LiarStructUtil::ParsePoint3(buff1->color, mesh->vertCol[tSrcColorIndex1], zy);
 
 				Liar::LiarVertexBuffer* buff2 = geo->GetBuffes()->at(tDestColorIndex2);
-				Liar::LiarStructUtil::ParsePoint3(buff2->color, mesh->vertCol[tSrcColorIndex2], true);
+				Liar::LiarStructUtil::ParsePoint3(buff2->color, mesh->vertCol[tSrcColorIndex2], zy);
 
 				Liar::LiarVertexBuffer* buff3 = geo->GetBuffes()->at(tDestColorIndex3);
-				Liar::LiarStructUtil::ParsePoint3(buff3->color, mesh->vertCol[tSrcColorIndex3], true);
+				Liar::LiarStructUtil::ParsePoint3(buff3->color, mesh->vertCol[tSrcColorIndex3], zy);
 			}
 		}
 	}
 
-	void LiarMeshParse::ParseLiarGeometryUV(Liar::LiarGeometry* geo, Mesh* mesh)
+	void LiarMeshParse::ParseLiarGeometryUV(Liar::LiarGeometry* geo, Mesh* mesh, bool zy)
 	{
 		int tFaceNum = mesh->getNumFaces();
 
@@ -211,14 +211,14 @@ namespace Liar
 				Liar::LiarVertexBuffer* buff2 = geo->GetBuffes()->at(tDestTexIndex2);
 				Liar::LiarVertexBuffer* buff3 = geo->GetBuffes()->at(tDestTexIndex3);
 				//注意：在纹理的纵向上，3ds max与我们游戏中是反的，也需要做下处理。
-				Liar::LiarStructUtil::ParsePoint3(buff1->uv, mesh->tVerts[tSrcTexIndex1], true);
-				Liar::LiarStructUtil::ParsePoint3(buff2->uv, mesh->tVerts[tSrcTexIndex2], true);
-				Liar::LiarStructUtil::ParsePoint3(buff3->uv, mesh->tVerts[tSrcTexIndex3], true);
+				Liar::LiarStructUtil::ParsePoint3(buff1->uv, mesh->tVerts[tSrcTexIndex1], zy);
+				Liar::LiarStructUtil::ParsePoint3(buff2->uv, mesh->tVerts[tSrcTexIndex2], zy);
+				Liar::LiarStructUtil::ParsePoint3(buff3->uv, mesh->tVerts[tSrcTexIndex3], zy);
 			}
 		}
 	}
 
-	void LiarMeshParse::ParseLiarMaterial(Liar::LiarMaterial* mat, INode* node)
+	void LiarMeshParse::ParseLiarMaterial(Liar::LiarMaterial* mat, INode* node, BOOL backFace)
 	{
 		Mtl* nodemtl = node->GetMtl();
 		Liar::StringUtil::WChar_tToString(nodemtl->GetName(), mat->name);
@@ -241,7 +241,7 @@ namespace Liar
 				{
 					texture = mat->GetTextures()->at(curIndex);
 				}
-				ParseLiarTexture(texture, nodemtl, i);
+				ParseLiarTexture(texture, nodemtl, i, backFace);
 				++curIndex;
 			}
 		}
@@ -255,13 +255,14 @@ namespace Liar
 		BitmapTex *bmt = (BitmapTex*)tmap;
 		if (bmt)
 		{
+			std::string& path = tex->GetPath();
 			const MCHAR* mapName = bmt->GetMapName();
-			Liar::StringUtil::WChar_tToString(mapName, tex->GetPath());
+			Liar::StringUtil::WChar_tToString(mapName, path);
 
-			if (!tex->GetPath().empty())
+			if (!path.empty())
 			{
 				// 得到文件名
-				std::string fullName = Liar::StringUtil::GetLast(tex->GetPath());
+				std::string fullName = Liar::StringUtil::GetLast(path);
 				// 得到扩展名
 				std::string strExt, name;
 				Liar::StringUtil::GetHeadAndLast(fullName, name, strExt);
