@@ -94,8 +94,7 @@ namespace Liar
 					mesh->checkNormals(TRUE);
 
 					Liar::LiarMesh* liarMesh = ctr->GetOrNewMesh(index);
-					liarMesh->ParseNode(node, mesh);
-
+					ctr->ParseLiarMesh(liarMesh, node, mesh);
 					
 					//如果在转换时有新的渲染模型生成，在这里进行释放。
 					if (delMesh)

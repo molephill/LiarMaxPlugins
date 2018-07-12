@@ -110,7 +110,7 @@ namespace Liar
 			Liar::LiarMesh* mesh = m_meshParse->GetMesh(i);
 			if (mesh)
 			{
-				sprintf(tText, "导出对象<%Ls>.............", mesh->ctrNode->GetName());
+				sprintf(tText, "导出对象<%s>.............", mesh->nodeName.c_str());
 				AddStrToOutPutListBox(tText);
 				sprintf(tText, "对应材质<%s>", mesh->GetMaterialName().c_str());
 				AddStrToOutPutListBox(tText);

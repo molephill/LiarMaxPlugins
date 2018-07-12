@@ -1,6 +1,7 @@
 #pragma once
 #include "LiarNodeParse.h"
 #include "LiarMesh.h"
+#include <LiarPluginUtil.h>
 
 namespace Liar
 {
@@ -27,7 +28,6 @@ namespace Liar
 		std::string& GetExportPathName() { return m_szExportPath; };
 
 	private:
-		void EraseMatrialIndex(int);
 		void EraseMeshIndex(int);
 
 	public:
@@ -37,6 +37,20 @@ namespace Liar
 
 		Liar::LiarMesh* GetOrNewMesh(int&);
 		Liar::LiarMesh* GetMesh(int);
+
+	private:
+		void ParseLiarGeometry(Liar::LiarGeometry*, Mesh*);
+		void ParseLiarGeometryBuffers(Liar::LiarGeometry*, Mesh*);
+		void ParseLiarVertexBuffer(Liar::LiarVertexBuffer*, Mesh*, int, bool zy = true);
+		void ParseLiarGeometryColor(Liar::LiarGeometry*, Mesh*);
+		void ParseLiarGeometryUV(Liar::LiarGeometry*, Mesh*);
+
+		void ParseLiarMaterial(Liar::LiarMaterial*, INode*);
+		void ParseLiarTexture(Liar::LiarTexture*, Mtl*, int, BOOL backFace = FALSE);
+
+	public:
+		void ParseLiarMesh(Liar::LiarMesh*, INode*, Mesh*);
+
 	};
 }
 

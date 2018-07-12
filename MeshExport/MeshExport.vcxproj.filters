@@ -73,6 +73,9 @@
     <ClInclude Include="..\PluginUtil\include\LiarVertexBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\PluginUtil\plugin\LiarPluginUtil.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="MeshExport.rc">

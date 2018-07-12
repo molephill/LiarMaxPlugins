@@ -1,11 +1,7 @@
-﻿  LiarMaterial.cpp
-  LiarMesh.cpp
-  LiarVertexBuffer.cpp
+﻿  LiarMesh.cpp
   LiarMeshParse.cpp
   LiarNodeParse.cpp
   MeshExport.cpp
-  DllEntry.cpp
-e:\c++\liarmaxplugins\meshexport\liarmeshparse.cpp(19): warning C4100: “suppressPrompts”: 未引用的形参
 e:\c++\liarmaxplugins\meshexport\meshexport.cpp(101): warning C4100: “szName”: 未引用的形参
   e:\c++\liarmaxplugins\meshexport\meshexport.cpp(129): TODO: Returns the number of file name extensions supported by the plug-in.
   e:\c++\liarmaxplugins\meshexport\meshexport.cpp(135): TODO: Return the 'i-th' file name extension (i.e. "3DS").
@@ -17,8 +13,8 @@ e:\c++\liarmaxplugins\meshexport\meshexport.cpp(101): warning C4100: “szName�
   e:\c++\liarmaxplugins\meshexport\meshexport.cpp(188): TODO: Decide which options to support.  Simply return true for each option supported by each Extension the exporter supports.
   e:\c++\liarmaxplugins\meshexport\meshexport.cpp(195): TODO: Implement the actual file Export here and
   e:\c++\liarmaxplugins\meshexport\meshexport.cpp(205): TODO: return TRUE If the file is exported properly
-  e:\c++\liarmaxplugins\meshexport\dllentry.cpp(79): TODO: Perform initialization here.
-  e:\c++\liarmaxplugins\meshexport\dllentry.cpp(88): TODO: Perform un-initialization here.
+e:\c++\liarmaxplugins\meshexport\liarmeshparse.cpp(19): warning C4100: “suppressPrompts”: 未引用的形参
+  LINK : 没有找到 D:\InitTools\3DMax2019\3ds Max 2019\Plugins\MeshExport.dle 或上一个增量链接没有生成它；正在执行完全链接
     正在创建库 E:\c++\LiarMaxPlugins\MeshExport\\obj\x64\Debug\\MeshExport.lib 和对象 E:\c++\LiarMaxPlugins\MeshExport\\obj\x64\Debug\\MeshExport.exp
   MeshExport.vcxproj -> D:\InitTools\3DMax2019\3ds Max 2019\Plugins\MeshExport.dle
   MeshExport.vcxproj -> D:\InitTools\3DMax2019\3ds Max 2019\Plugins\MeshExport.dle.pdb (Full PDB)

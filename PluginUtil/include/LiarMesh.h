@@ -7,11 +7,6 @@
 #include <LiarMaterial.h>
 #include "LiarVertexBuffer.h"
 
-#ifdef PLUGINS
-#include <triobj.h>
-#endif // PLUGINS
-
-
 namespace Liar
 {
 
@@ -27,18 +22,13 @@ namespace Liar
 
 		std::vector<unsigned int>* m_indices;
 
-	private:
-		void EraseIndexBuff(int);
-
-#ifdef PLUGINS
 	public:
-		void ParseNode(Mesh*);
+		std::vector<Liar::LiarVertexBuffer*>* GetBuffes() { return m_allVertexBuffers; };
+		std::vector<unsigned int>* GetIndices() { return m_indices; };
+		unsigned int GetBufferSize() { return m_bufferSize; };
+		void SetBufferSize(unsigned int v) { m_bufferSize = v; };
 
-	private:
-		void ParseVertexData(Mesh*);
-		void CollectColor(Mesh*);
-		void CollectUV(Mesh*);
-#endif // PLUGINS
+		void EraseIndexBuff(int);
 	};
 
 	class LiarMesh
@@ -52,13 +42,14 @@ namespace Liar
 		Liar::LiarMaterial* m_material;
 
 	public:
-		std::string nodeName;
+		Liar::LiarGeometry* GetGeo() { return m_geometry; };
+		Liar::LiarMaterial* GetMat() { return m_material; };
+
 #ifdef PLUGINS
-		INode* ctrNode;
+		std::string nodeName;
 		int vertexNum;
 		int faceNum;
 
-		void ParseNode(INode*, Mesh*);
 		std::string& GetMaterialName() { return m_material->name; };
 #endif // !PLUGINS
 
