@@ -9,7 +9,7 @@ namespace Liar
 		m_allVertexBuffers = new std::vector<Liar::LiarVertexBuffer*>();
 		m_bufferSize = 0;
 
-		m_indices = new std::vector<int>();
+		m_indices = new std::vector<unsigned int>();
 	}
 
 	LiarGeometry::~LiarGeometry()
@@ -18,7 +18,7 @@ namespace Liar
 		std::vector<Liar::LiarVertexBuffer*>().swap(*m_allVertexBuffers);
 		delete m_allVertexBuffers;
 
-		std::vector<int>().swap(*m_indices);
+		std::vector<unsigned int>().swap(*m_indices);
 		delete m_indices;
 	}
 
@@ -35,7 +35,7 @@ namespace Liar
 #ifdef PLUGINS
 	void LiarGeometry::ParseNode(Mesh* mesh)
 	{
-		std::vector<int>().swap(*m_indices);
+		std::vector<unsigned int>().swap(*m_indices);
 
 		ParseVertexData(mesh);
 		CollectColor(mesh);

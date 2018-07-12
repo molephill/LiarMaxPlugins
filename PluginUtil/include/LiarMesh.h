@@ -25,7 +25,7 @@ namespace Liar
 		std::vector<Liar::LiarVertexBuffer*>* m_allVertexBuffers;
 		int m_bufferSize;
 
-		std::vector<int>* m_indices;
+		std::vector<unsigned int>* m_indices;
 
 	private:
 		void EraseIndexBuff(int);
