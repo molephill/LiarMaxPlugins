@@ -4,8 +4,6 @@ namespace Liar
 {
 	LiarMeshParse::LiarMeshParse()
 	{
-		m_allMaterials = new std::vector<Liar::LiarMaterialParse*>();
-		m_materialSize = 0;
 		m_allMeshs = new std::vector<Liar::LiarMesh*>();
 		m_meshSize = 0;
 	}
@@ -13,10 +11,6 @@ namespace Liar
 
 	LiarMeshParse::~LiarMeshParse()
 	{
-		EraseMatrialIndex(0);
-		std::vector<Liar::LiarMaterialParse*>().swap(*m_allMaterials);
-		delete m_allMaterials;
-
 		EraseMeshIndex(0);
 		std::vector<Liar::LiarMesh*>().swap(*m_allMeshs);
 		delete m_allMeshs;
@@ -31,49 +25,6 @@ namespace Liar
 		m_pInterface = ip;
 		m_exportSelect = (options & SCENE_EXPORT_SELECTED);
 
-	}
-
-	int LiarMeshParse::ParseMatrial()
-	{
-		//通过m_pInterface取得场景中的材质库
-		MtlBaseLib * scenemats = m_pInterface->GetSceneMtls();
-
-		int matrialSize = 0;
-		if (scenemats)
-		{
-			int matrialCount = scenemats->Count();
-			if (matrialCount > 0)
-			{
-				//取得材质数量
-				for (int i = 0; i < matrialCount; i++)
-				{
-					MtlBase* vMtl = (*scenemats)[i];
-					if (IsMtl(vMtl))
-					{
-						Liar::LiarMaterialParse* pParseMaterial = nullptr;
-						if (matrialSize >= m_materialSize)
-						{
-							pParseMaterial = new Liar::LiarMaterialParse();
-							m_allMaterials->push_back(pParseMaterial);
-							++m_materialSize;
-						}
-						else
-						{
-							pParseMaterial = m_allMaterials->at(i);
-						}
-						//memset(pParseMaterial, 0, sizeof(SubMaterial));
-						//pParseMaterial->SetID(matrialSize++);
-						++matrialSize;
-
-						////遍历材质所用的贴图
-						pParseMaterial->SubTextureEnum(vMtl, matrialSize);
-					}
-				}
-			}
-		}
-
-		EraseMatrialIndex(matrialSize);
-		return matrialSize;
 	}
 
 	// ==================== 解析节点 =======================
@@ -128,16 +79,6 @@ namespace Liar
 	}
 
 	// ==================== 释放多余的数组 =================
-	void LiarMeshParse::EraseMatrialIndex(int index)
-	{
-		for (std::vector<Liar::LiarMaterialParse*>::iterator it = m_allMaterials->begin() + index; it != m_allMaterials->end();)
-		{
-			delete *it;
-			it = m_allMaterials->erase(it);
-			--m_materialSize;
-		}
-	}
-
 	void LiarMeshParse::EraseMeshIndex(int index)
 	{
 		for (std::vector<Liar::LiarMesh*>::iterator it = m_allMeshs->begin() + index; it != m_allMeshs->end();)

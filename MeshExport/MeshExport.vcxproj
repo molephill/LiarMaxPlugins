@@ -52,9 +52,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\PluginUtil\LiarMaterial.cpp" />
     <ClCompile Include="..\PluginUtil\LiarMesh.cpp" />
     <ClCompile Include="..\PluginUtil\LiarVertexBuffer.cpp" />
-    <ClCompile Include="LiarMaterialParse.cpp" />
     <ClCompile Include="LiarMeshParse.cpp" />
     <ClCompile Include="LiarNodeParse.cpp" />
     <ClCompile Include="MeshExport.cpp" />
@@ -64,14 +64,14 @@
     <None Include="MeshExport.def" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\PluginUtil\include\LiarMaterial.h" />
     <ClInclude Include="..\PluginUtil\include\LiarMesh.h" />
     <ClInclude Include="..\PluginUtil\include\LiarStringUtil.h" />
+    <ClInclude Include="..\PluginUtil\include\LiarVertexBuffer.h" />
     <ClInclude Include="..\PluginUtil\include\PluginDefine.h" />
     <ClInclude Include="3dsmaxsdk_preinclude.h" />
-    <ClInclude Include="LiarMaterialParse.h" />
     <ClInclude Include="LiarMeshParse.h" />
     <ClInclude Include="LiarNodeParse.h" />
-    <ClInclude Include="LiarVertexBuffer.h" />
     <ClInclude Include="MeshExport.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>

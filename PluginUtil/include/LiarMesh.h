@@ -4,6 +4,7 @@
 
 #include <PluginDefine.h>
 #include <LiarStringUtil.h>
+#include <LiarMaterial.h>
 #include "LiarVertexBuffer.h"
 
 #ifdef PLUGINS
@@ -26,6 +27,9 @@ namespace Liar
 
 		std::vector<int>* m_indices;
 
+	private:
+		void EraseIndexBuff(int);
+
 #ifdef PLUGINS
 	public:
 		void ParseNode(Mesh*);
@@ -35,10 +39,6 @@ namespace Liar
 		void CollectColor(Mesh*);
 		void CollectUV(Mesh*);
 #endif // PLUGINS
-
-
-	private:
-		void EraseIndexBuff(int);
 	};
 
 	class LiarMesh
@@ -48,8 +48,8 @@ namespace Liar
 		~LiarMesh();
 
 	private:
-		std::string m_materialName;
 		Liar::LiarGeometry* m_geometry;
+		Liar::LiarMaterial* m_material;
 
 	public:
 		std::string nodeName;
@@ -57,15 +57,10 @@ namespace Liar
 		INode* ctrNode;
 		int vertexNum;
 		int faceNum;
-#endif // !PLUGINS
 
-
-	public:
-		std::string& GetMaterialName() { return m_materialName; };
-
-#ifdef PLUGINS
 		void ParseNode(INode*, Mesh*);
-#endif // PLUGINS
+		std::string& GetMaterialName() { return m_material->name; };
+#endif // !PLUGINS
 
 	};
 }

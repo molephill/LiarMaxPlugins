@@ -100,25 +100,21 @@ namespace Liar
 // ==================================== self =====================================
 	int MeshExport::ExportMesh(const char* szName)
 	{
-		// =============== 解析材质 ==================
-		int matrialCount = m_meshParse->ParseMatrial();
-		char tText[512];
-		sprintf(tText, "共有材质%d个", matrialCount);
-		AddStrToOutPutListBox(tText);
-		
+		// =============== 解析材质 ==================		
 		m_meshParse->ParseNode();
 
 		int meshSize = m_meshParse->GetMeshSize();
+		char tText[512];
 		for (int i = 0; i < meshSize; ++i)
 		{
 			Liar::LiarMesh* mesh = m_meshParse->GetMesh(i);
 			if (mesh)
 			{
-				sprintf(tText, "导出对象<%s>.............", mesh->ctrNode->GetName());
+				sprintf(tText, "导出对象<%Ls>.............", mesh->ctrNode->GetName());
 				AddStrToOutPutListBox(tText);
-				sprintf(tText, "对应材质<%s>", mesh->GetMaterialName());
+				sprintf(tText, "对应材质<%s>", mesh->GetMaterialName().c_str());
 				AddStrToOutPutListBox(tText);
-				sprintf(tText, "模型<%s> 顶点数 :<%d> 面数:<%d>", mesh->nodeName, mesh->vertexNum, mesh->faceNum);
+				sprintf(tText, "模型<%s> 顶点数 :<%d> 面数:<%d>", mesh->nodeName.c_str(), mesh->vertexNum, mesh->faceNum);
 				AddStrToOutPutListBox(tText);
 			}
 		}

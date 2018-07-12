@@ -99,19 +99,13 @@ namespace Liar
 
 				//将色彩数组vertCol中对应三角面各顶点色彩的值赋值给相应的顶点。
 				Liar::LiarVertexBuffer* buff1 = m_allVertexBuffers->at(tDestColorIndex1);
-				buff1->r = mesh->vertCol[tSrcColorIndex1].x;
-				buff1->g = mesh->vertCol[tSrcColorIndex1].y;
-				buff1->b = mesh->vertCol[tSrcColorIndex1].z;
+				buff1->color->ParseMaxPoint3(mesh->vertCol[tSrcColorIndex1], true);
 
 				Liar::LiarVertexBuffer* buff2 = m_allVertexBuffers->at(tDestColorIndex2);
-				buff2->r = mesh->vertCol[tSrcColorIndex2].x;
-				buff2->g = mesh->vertCol[tSrcColorIndex2].y;
-				buff2->b = mesh->vertCol[tSrcColorIndex2].z;
+				buff2->color->ParseMaxPoint3(mesh->vertCol[tSrcColorIndex2], true);
 
 				Liar::LiarVertexBuffer* buff3 = m_allVertexBuffers->at(tDestColorIndex3);
-				buff3->r = mesh->vertCol[tSrcColorIndex3].x;
-				buff3->g = mesh->vertCol[tSrcColorIndex3].y;
-				buff3->b = mesh->vertCol[tSrcColorIndex3].z;
+				buff3->color->ParseMaxPoint3(mesh->vertCol[tSrcColorIndex3], true);
 			}
 		}
 	}
@@ -144,14 +138,9 @@ namespace Liar
 				Liar::LiarVertexBuffer* buff2 = m_allVertexBuffers->at(tDestTexIndex2);
 				Liar::LiarVertexBuffer* buff3 = m_allVertexBuffers->at(tDestTexIndex3);
 				//注意：在纹理的纵向上，3ds max与我们游戏中是反的，也需要做下处理。
-				buff1->u = mesh->tVerts[tSrcTexIndex1].x;
-				buff1->v = 1.0 - mesh->tVerts[tSrcTexIndex1].y;
-
-				buff2->u = mesh->tVerts[tSrcTexIndex2].x;
-				buff2->v = 1.0 - mesh->tVerts[tSrcTexIndex2].y;
-
-				buff3->u = mesh->tVerts[tSrcTexIndex3].x;
-				buff3->v = 1.0 - mesh->tVerts[tSrcTexIndex3].y;
+				buff1->uv->ParseMaxPoint3(mesh->tVerts[tSrcTexIndex1], true);
+				buff2->uv->ParseMaxPoint3(mesh->tVerts[tSrcTexIndex2], true);
+				buff3->uv->ParseMaxPoint3(mesh->tVerts[tSrcTexIndex3], true);
 			}
 		}
 	}
@@ -160,9 +149,9 @@ namespace Liar
 
 	// =============================== Geometory ===============================
 
-	LiarMesh::LiarMesh()
-		:m_materialName("")
-		,m_geometry(new Liar::LiarGeometry())
+	LiarMesh::LiarMesh():
+		m_geometry(new Liar::LiarGeometry())
+		,m_material(new Liar::LiarMaterial())
 	{
 	}
 
@@ -170,6 +159,7 @@ namespace Liar
 	LiarMesh::~LiarMesh()
 	{
 		delete m_geometry;
+		delete m_material;
 	}
 
 #ifdef PLUGINS
@@ -181,13 +171,9 @@ namespace Liar
 		faceNum = mesh->getNumFaces();
 		vertexNum = mesh->getNumVerts();
 
-		// 取得模型对应的材质。
-		Mtl* nodemtl = node->GetMtl();
-		if (nodemtl)
-		{
-			MSTR& matrialName = nodemtl->GetName();
-			Liar::StringUtil::WChar_tToString(matrialName, m_materialName);
-		}
+		m_geometry->ParseNode(mesh);
+		m_material->ParseNode(node);
+
 
 		//取得当前结点相对于中心点的矩阵信息。
 		//Matrix3 tTMAfterWSMM = node->GetNodeTM(tTime);
@@ -201,9 +187,8 @@ namespace Liar
 		//		tSubMesh.m_SubMeshMatrix.m[m * 4 + n] = tGMeshTM[m][n];
 		//	}
 		//}
-
-		m_geometry->ParseNode(mesh);
 	}
+
 #endif // PLUGINS
 
 }

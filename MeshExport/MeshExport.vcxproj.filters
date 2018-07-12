@@ -24,9 +24,6 @@
     <ClCompile Include="LiarMeshParse.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="LiarMaterialParse.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="LiarNodeParse.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -34,6 +31,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\PluginUtil\LiarVertexBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\PluginUtil\LiarMaterial.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -55,12 +55,6 @@
     <ClInclude Include="LiarMeshParse.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="LiarVertexBuffer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="LiarMaterialParse.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="LiarNodeParse.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -71,6 +65,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\PluginUtil\include\PluginDefine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\PluginUtil\include\LiarMaterial.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\PluginUtil\include\LiarVertexBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

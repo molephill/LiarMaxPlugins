@@ -1,5 +1,4 @@
 #pragma once
-#include "LiarMaterialParse.h"
 #include "LiarNodeParse.h"
 #include "LiarMesh.h"
 
@@ -18,16 +17,11 @@ namespace Liar
 		std::string		m_szExportPath;		// µ¼³öÄ¿Â¼
 
 	private:
-		std::vector<Liar::LiarMaterialParse*>* m_allMaterials;
-		int m_materialSize;
-
 		std::vector<Liar::LiarMesh*>* m_allMeshs;
 		int m_meshSize;
 
 	public:
 		void SetControl(const TCHAR* name, ExpInterface* ei, Interface* ip, BOOL suppressPrompts, DWORD options);
-
-		int ParseMatrial();
 		int ParseNode();
 
 		std::string& GetExportPathName() { return m_szExportPath; };
