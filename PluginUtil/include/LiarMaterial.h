@@ -7,11 +7,6 @@
 #include <LiarVertexBuffer.h>
 #include <LiarStringUtil.h>
 
-#ifdef PLUGINS
-#include <triobj.h>
-#include <stdmat.h>
-#endif // PLUGINS
-
 namespace Liar
 {
 	// ====================  Œ∆¿Ì ================

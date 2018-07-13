@@ -1,8 +1,17 @@
 #pragma once
 #include <string>
+
+#include <PluginDefine.h>
+
+#ifdef PLUGINS
 #include <impexp.h>
 #include <iparamb2.h>
 #include <iparamm2.h>
+#else
+#include <cctype>
+#include <algorithm>
+#include <windows.h>
+#endif // PLUGINS
 
 namespace Liar
 {
@@ -45,6 +54,7 @@ namespace Liar
 			}
 		}
 
+#ifdef PLUGINS
 		static void GetWSTR2Char(const WStr& name, std::string& out)
 		{
 			char tmpName[_MAX_PATH];
@@ -63,6 +73,8 @@ namespace Liar
 			wcstombs_s(&converted, tmpName, len, name, _TRUNCATE);
 			out = tmpName;
 		}
+#endif // !PLUGINS
+
 
 		static void WChar_tToString(const wchar_t* wchar, std::string& out)
 		{

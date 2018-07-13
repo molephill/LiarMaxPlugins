@@ -1,6 +1,9 @@
 #include "LiarMeshParse.h"
 #include "LiarMeshWrite.h"
 
+#include <triobj.h>
+#include <stdmat.h>
+
 namespace Liar
 {
 	LiarMeshParse::LiarMeshParse()

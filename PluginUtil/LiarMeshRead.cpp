@@ -4,7 +4,8 @@ namespace Liar
 {
 	Liar::LiarMesh* LiarMeshRead::ReadMesh(const char* path)
 	{
-		FILE* pFile = fopen(path, "rb+");
+		FILE* pFile;
+		fopen_s(&pFile, path, "rb+");
 		if (!pFile)
 		{
 			return nullptr;
@@ -13,6 +14,7 @@ namespace Liar
 		{
 			Liar::LiarMesh* mesh = new Liar::LiarMesh();
 			ReadLiarMesh(mesh, pFile);
+			fclose(pFile);
 			return mesh;
 		}
 	}
