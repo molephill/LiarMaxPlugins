@@ -18,5 +18,7 @@ namespace Liar
 
 		static void WriteLiarVertexBuffer(Liar::LiarVertexBuffer*, FILE*);
 		static void WriteLiarTexture(Liar::LiarTexture*, FILE*);
+
+		static void WriteString(std::string&, FILE*);
 	};
 }

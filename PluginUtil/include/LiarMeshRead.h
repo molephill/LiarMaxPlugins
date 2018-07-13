@@ -18,6 +18,8 @@ namespace Liar
 
 		static void ReadLiarVertexBuffer(Liar::LiarVertexBuffer*, FILE*);
 		static void ReadLiarTexture(Liar::LiarTexture*, FILE*);
+
+		static void ReadString(std::string&, FILE*);
 	};
 }
 

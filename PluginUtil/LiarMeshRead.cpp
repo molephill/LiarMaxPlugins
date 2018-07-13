@@ -25,7 +25,8 @@ namespace Liar
 		unsigned int ver = 0;
 		fread(&ver, sizeof(unsigned int), 1, pFile);
 		// read mesh`s name
-		fread(&(mesh->meshName), sizeof(std::string), 1, pFile);
+		//fread(&(mesh->meshName), sizeof(std::string), 1, pFile);
+		ReadString(mesh->meshName, pFile);
 		// read mesh`s Geometery
 		ReadLiarGeometery(mesh->GetGeo(), pFile);
 		// read mesh`s material
@@ -75,29 +76,46 @@ namespace Liar
 
 	void LiarMeshRead::ReadLiarVertexBuffer(Liar::LiarVertexBuffer* buff, FILE* pFile)
 	{
+		size_t p3Size = sizeof(Liar::LiarPoint3);
 		// write pos
-		fread(buff->position, sizeof(Liar::LiarPoint3), 1, pFile);
+		fread(buff->position, p3Size, 1, pFile);
 		// write normal
-		fread(buff->normal, sizeof(Liar::LiarPoint3), 1, pFile);
+		fread(buff->normal, p3Size, 1, pFile);
 		// write color
-		fread(buff->color, sizeof(Liar::LiarPoint3), 1, pFile);
+		fread(buff->color, p3Size, 1, pFile);
 		// write uv
-		fread(buff->uv, sizeof(Liar::LiarPoint2), 1, pFile);
+		size_t p2Size = sizeof(Liar::LiarPoint2);
+		fread(buff->uv, p2Size, 1, pFile);
 	}
 
 	void LiarMeshRead::ReadLiarTexture(Liar::LiarTexture* tex, FILE* pFile)
 	{
 		// read name
-		fread(&(tex->GetName()), sizeof(std::string), 1, pFile);
+		//fread(&(tex->GetName()), sizeof(std::string), 1, pFile);
+		ReadString(tex->GetName(), pFile);
+
+		size_t p3Size = sizeof(Liar::LiarPoint3);
 		// write Ambient
-		fread(tex->GetAmbient(), sizeof(Liar::LiarPoint3), 1, pFile);
+		fread(tex->GetAmbient(), p3Size, 1, pFile);
 		// write Diffuse
-		fread(tex->GetDiffuse(), sizeof(Liar::LiarPoint3), 1, pFile);
+		fread(tex->GetDiffuse(), p3Size, 1, pFile);
 		// read Specular
-		fread(tex->GetSpecular(), sizeof(Liar::LiarPoint3), 1, pFile);
+		fread(tex->GetSpecular(), p3Size, 1, pFile);
 		// read Shininess
 		float shininess = 0;
 		fread(&shininess, sizeof(float), 1, pFile);
 		tex->SetShininess(shininess);
+	}
+
+	void LiarMeshRead::ReadString(std::string& s, FILE* pFile)
+	{
+		int size = 0;
+		fread(&size, sizeof(int), 1, pFile);
+		for (int i = 0; i < size; ++i)
+		{
+			char a ;
+			fread(&a, sizeof(char), 1, pFile);
+			s.push_back(a);
+		}
 	}
 }

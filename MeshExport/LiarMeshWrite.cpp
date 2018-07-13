@@ -42,7 +42,8 @@ namespace Liar
 		// write ver
 		fwrite(&ver, sizeof(unsigned int), 1, hFile);
 		// write mesh`s name
-		fwrite(&meshName, sizeof(meshName), 1, hFile);
+		//fwrite(&meshName, sizeof(std::string), 1, hFile);
+		WriteString(meshName, hFile);
 		// write mesh`s geometery
 		WriteLiarGeometery(mesh->GetGeo(), hFile);
 		// write mesh`s material
@@ -84,29 +85,41 @@ namespace Liar
 	void LiarMeshWrite::WriteLiarVertexBuffer(Liar::LiarVertexBuffer* buff, FILE* hFile)
 	{
 		// write pos
-		fwrite(buff->position, sizeof(Liar::LiarPoint3), 1, hFile);
+		size_t p3Size = sizeof(Liar::LiarPoint3);
+		fwrite(buff->position, p3Size, 1, hFile);
 		// write normal
-		fwrite(buff->normal, sizeof(Liar::LiarPoint3), 1, hFile);
+		fwrite(buff->normal, p3Size, 1, hFile);
 		// write color
-		fwrite(buff->color, sizeof(Liar::LiarPoint3), 1, hFile);
+		fwrite(buff->color, p3Size, 1, hFile);
 		// write uv
-		fwrite(buff->uv, sizeof(Liar::LiarPoint2), 1, hFile);
+		size_t p2Size = sizeof(Liar::LiarPoint2);
+		fwrite(buff->uv, p2Size, 1, hFile);
 	}
 
 	void LiarMeshWrite::WriteLiarTexture(Liar::LiarTexture* tex, FILE* hFile)
 	{
 		// wirte name
 		std::string& texName = tex->GetName();
-		fwrite(&texName, sizeof(texName), 1, hFile);
+		//fwrite(&texName, sizeof(std::string), 1, hFile);
+		WriteString(texName, hFile);
+		size_t p3Size = sizeof(Liar::LiarPoint3);
 		// write Ambient
-		fwrite(tex->GetAmbient(), sizeof(Liar::LiarPoint3), 1, hFile);
+		fwrite(tex->GetAmbient(), p3Size, 1, hFile);
 		// write Diffuse
-		fwrite(tex->GetDiffuse(), sizeof(Liar::LiarPoint3), 1, hFile);
+		fwrite(tex->GetDiffuse(), p3Size, 1, hFile);
 		// write Specular
-		fwrite(tex->GetSpecular(), sizeof(Liar::LiarPoint3), 1, hFile);
+		fwrite(tex->GetSpecular(), p3Size, 1, hFile);
 		// write Shininess
 		float shininess = tex->GetShininess();
 		fwrite(&shininess, sizeof(float), 1, hFile);
+	}
+
+	void LiarMeshWrite::WriteString(std::string& s, FILE* hFile)
+	{
+		int size = static_cast<int>(s.size());
+		// wirte char num;
+		fwrite(&size, sizeof(int), 1, hFile);
+		fwrite(&s.front(), sizeof(char), size, hFile);
 	}
 
 }
