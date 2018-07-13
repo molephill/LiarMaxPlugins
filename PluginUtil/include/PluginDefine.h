@@ -1,3 +1,3 @@
 #pragma once
 // maxs version
-//#define PLUGINS 2019
+#define PLUGINS 2019

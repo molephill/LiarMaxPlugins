@@ -28,6 +28,8 @@ namespace Liar
 		fread(&(mesh->meshName), sizeof(std::string), 1, pFile);
 		// read mesh`s Geometery
 		ReadLiarGeometery(mesh->GetGeo(), pFile);
+		// read mesh`s material
+		ReadLiarMaterial(mesh->GetMat(), pFile);
 	}
 
 	void LiarMeshRead::ReadLiarGeometery(Liar::LiarGeometry* geo, FILE* pFile)
