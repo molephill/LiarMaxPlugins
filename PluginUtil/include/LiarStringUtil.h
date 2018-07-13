@@ -72,5 +72,15 @@ namespace Liar
 			out = psText;
 			delete[] psText;
 		}
+
+		static void StringToUpper(std::string& name)
+		{
+			std::transform(name.begin(), name.end(), name.begin(), ::toupper);
+		}
+
+		static void StringToLower(std::string& strExt)
+		{
+			std::transform(strExt.begin(), strExt.end(), strExt.begin(), ::tolower);
+		}
 	};
 }

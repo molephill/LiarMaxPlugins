@@ -6,3 +6,8 @@
 *.opendb
 *.db
 *.tlog
+*.tlog
+*.obj
+*.exp
+*.lib
+*.tlog

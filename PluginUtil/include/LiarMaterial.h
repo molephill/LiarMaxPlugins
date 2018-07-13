@@ -23,7 +23,7 @@ namespace Liar
 		~LiarTexture();
 
 	private:
-		std::string m_path;
+		std::string m_name;
 
 		Liar::LiarPoint3* m_ambient;
 		Liar::LiarPoint3* m_diffuse;
@@ -31,19 +31,15 @@ namespace Liar
 		float m_shininess;
 
 	public:
-		std::string& GetPath() { return m_path; };
-		void SetPath(char* v) { m_path = v; };
-		void SetPath(const std::string& v) { m_path = v; };
+		std::string& GetName() { return m_name; };
+		void SetPath(char* v) { m_name = v; };
+		void SetPath(const std::string& v) { m_name = v; };
 
 		Liar::LiarPoint3* GetAmbient() { return m_ambient; };
 		Liar::LiarPoint3* GetDiffuse() { return m_diffuse; };
 		Liar::LiarPoint3* GetSpecular() { return m_specular; };
+		float GetShininess() { return m_shininess; };
 		void SetShininess(float v) { m_shininess = v; };
-
-#ifdef PLUGINS
-	public:
-		void ParseMaxMap(Mtl*, int, BOOL back = FALSE);
-#endif // PLUGINS
 
 	};
 
@@ -63,13 +59,14 @@ namespace Liar
 		void EraseIndex(int);
 
 		std::vector<Liar::LiarTexture*>* GetTextures() { return m_allTextures; };
+		Liar::LiarTexture* GetTexture(int index) { return m_allTextures->at(index); };
+
 		int GetTexSize() { return m_textureSize; };
 		void SetTexSize(int v) { m_textureSize = v; };
 
 #ifdef PLUGINS
 	public:
 		std::string name;
-		void ParseNode(INode*);
 #endif // PLUGINS
 
 	};

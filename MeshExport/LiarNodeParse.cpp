@@ -113,7 +113,7 @@ namespace Liar
 					if (!liarMesh)
 					{
 						liarMesh = ctr->GetOrNewMesh(index);
-						Liar::StringUtil::WChar_tToString(node->GetName(), liarMesh->nodeName);
+						Liar::StringUtil::WChar_tToString(node->GetName(), liarMesh->meshName);
 					}
 					ctr->ParseLiarMesh(liarMesh, node, mesh, zy);
 					

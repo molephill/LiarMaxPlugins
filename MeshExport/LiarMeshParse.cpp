@@ -1,4 +1,5 @@
 #include "LiarMeshParse.h"
+#include "LiarMeshWrite.h"
 
 namespace Liar
 {
@@ -51,6 +52,9 @@ namespace Liar
 			EraseMeshIndex(curMeshIndex);
 			delete meshNodeParse;
 		}
+
+		Liar::LiarMeshWrite::WriteMesh(this, m_szExportPath.c_str(), 0);
+
 		return 0;
 	}
 
@@ -122,12 +126,12 @@ namespace Liar
 			if (i >= bufferSize)
 			{
 				buff = new Liar::LiarVertexBuffer();
-				geo->GetBuffes()->push_back(buff);
+				geo->GetBuffers()->push_back(buff);
 				geo->SetBufferSize(++bufferSize);
 			}
 			else
 			{
-				buff = geo->GetBuffes()->at(i);
+				buff = geo->GetBuffers()->at(i);
 			}
 
 			ParseLiarVertexBuffer(buff, mesh, i, zy);
@@ -174,13 +178,13 @@ namespace Liar
 				int	tDestColorIndex3 = mesh->faces[i].v[2];
 
 				//将色彩数组vertCol中对应三角面各顶点色彩的值赋值给相应的顶点。
-				Liar::LiarVertexBuffer* buff1 = geo->GetBuffes()->at(tDestColorIndex1);
+				Liar::LiarVertexBuffer* buff1 = geo->GetBuffers()->at(tDestColorIndex1);
 				Liar::LiarStructUtil::ParsePoint3(buff1->color, mesh->vertCol[tSrcColorIndex1], zy);
 
-				Liar::LiarVertexBuffer* buff2 = geo->GetBuffes()->at(tDestColorIndex2);
+				Liar::LiarVertexBuffer* buff2 = geo->GetBuffers()->at(tDestColorIndex2);
 				Liar::LiarStructUtil::ParsePoint3(buff2->color, mesh->vertCol[tSrcColorIndex2], zy);
 
-				Liar::LiarVertexBuffer* buff3 = geo->GetBuffes()->at(tDestColorIndex3);
+				Liar::LiarVertexBuffer* buff3 = geo->GetBuffers()->at(tDestColorIndex3);
 				Liar::LiarStructUtil::ParsePoint3(buff3->color, mesh->vertCol[tSrcColorIndex3], zy);
 			}
 		}
@@ -209,9 +213,9 @@ namespace Liar
 				int	tDestTexIndex3 = mesh->faces[i].v[2];
 
 				//将纹理坐标数组tVerts中对应三角面各顶点纹理坐标的值赋值给相应的顶点。
-				Liar::LiarVertexBuffer* buff1 = geo->GetBuffes()->at(tDestTexIndex1);
-				Liar::LiarVertexBuffer* buff2 = geo->GetBuffes()->at(tDestTexIndex2);
-				Liar::LiarVertexBuffer* buff3 = geo->GetBuffes()->at(tDestTexIndex3);
+				Liar::LiarVertexBuffer* buff1 = geo->GetBuffers()->at(tDestTexIndex1);
+				Liar::LiarVertexBuffer* buff2 = geo->GetBuffers()->at(tDestTexIndex2);
+				Liar::LiarVertexBuffer* buff3 = geo->GetBuffers()->at(tDestTexIndex3);
 				//注意：在纹理的纵向上，3ds max与我们游戏中是反的，也需要做下处理。
 				Liar::LiarStructUtil::ParsePoint3(buff1->uv, mesh->tVerts[tSrcTexIndex1], zy);
 				Liar::LiarStructUtil::ParsePoint3(buff2->uv, mesh->tVerts[tSrcTexIndex2], zy);
@@ -257,7 +261,7 @@ namespace Liar
 		BitmapTex *bmt = (BitmapTex*)tmap;
 		if (bmt)
 		{
-			std::string& path = tex->GetPath();
+			std::string& path = tex->GetName();
 			const MCHAR* mapName = bmt->GetMapName();
 			Liar::StringUtil::WChar_tToString(mapName, path);
 

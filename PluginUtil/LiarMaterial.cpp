@@ -5,7 +5,7 @@ namespace Liar
 
 	// ====================  Œ∆¿Ì ================
 
-	LiarTexture::LiarTexture():m_path(""), m_shininess(0.0f)
+	LiarTexture::LiarTexture():m_name(""), m_shininess(0.0f)
 	{
 		m_ambient = new Liar::LiarPoint3();
 		m_diffuse = new Liar::LiarPoint3();

@@ -23,10 +23,15 @@ namespace Liar
 		std::vector<unsigned int>* m_indices;
 
 	public:
-		std::vector<Liar::LiarVertexBuffer*>* GetBuffes() { return m_allVertexBuffers; };
+		std::vector<Liar::LiarVertexBuffer*>* GetBuffers() { return m_allVertexBuffers; };
 		std::vector<unsigned int>* GetIndices() { return m_indices; };
+
+
 		unsigned int GetBufferSize() { return m_bufferSize; };
+		size_t GetIndicesSize() { return m_indices->size(); };
+
 		void SetBufferSize(unsigned int v) { m_bufferSize = v; };
+		LiarVertexBuffer* GetBuffer(int index) { return m_allVertexBuffers->at(index); };
 
 		void EraseIndexBuff(int);
 	};
@@ -45,8 +50,9 @@ namespace Liar
 		Liar::LiarGeometry* GetGeo() { return m_geometry; };
 		Liar::LiarMaterial* GetMat() { return m_material; };
 
+		std::string meshName;
+
 #ifdef PLUGINS
-		std::string nodeName;
 		int vertexNum;
 		int faceNum;
 
