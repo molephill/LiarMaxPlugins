@@ -38,7 +38,12 @@ namespace Liar
 		int indiceSize = 0;
 		fread(&indiceSize, sizeof(int), 1, pFile);
 		// read indices
-		fread(geo->GetIndices(), sizeof(unsigned int), indiceSize, pFile);
+		for (int i = 0; i < indiceSize; ++i)
+		{
+			unsigned int index = 0;
+			fread(&index, sizeof(unsigned int), 1, pFile);
+			geo->GetIndices()->push_back(index);
+		}
 
 		// read bufferSize
 		int bufferSize = 0;
