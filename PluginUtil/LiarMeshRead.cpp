@@ -5,7 +5,11 @@ namespace Liar
 	Liar::LiarMesh* LiarMeshRead::ReadMesh(const char* path)
 	{
 		FILE* pFile;
+#ifndef __APPLE__
 		fopen_s(&pFile, path, "rb+");
+#else
+        pFile = fopen(path, "rb+");
+#endif
 		if (!pFile)
 		{
 			return nullptr;

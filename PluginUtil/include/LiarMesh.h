@@ -7,6 +7,10 @@
 #include <LiarMaterial.h>
 #include "LiarVertexBuffer.h"
 
+#ifndef PLUGINS
+#include "Define.h"
+#endif
+
 namespace Liar
 {
 
@@ -28,12 +32,23 @@ namespace Liar
 
 
 		unsigned int GetBufferSize() { return m_bufferSize; };
-		size_t GetIndicesSize() { return m_indices->size(); };
+		int GetIndicesSize() { return static_cast<int>(m_indices->size()); };
 
 		void SetBufferSize(unsigned int v) { m_bufferSize = v; };
 		LiarVertexBuffer* GetBuffer(int index) { return m_allVertexBuffers->at(index); };
 
 		void EraseIndexBuff(int);
+        
+    public:
+        void Upload();
+        void Render();
+        
+#ifndef PLUGINS
+    private:
+        unsigned int VAO;
+        unsigned int VBO;
+        unsigned int EBO;
+#endif
 	};
 
 	class LiarMesh
@@ -51,6 +66,10 @@ namespace Liar
 		Liar::LiarMaterial* GetMat() { return m_material; };
 
 		std::string meshName;
+        
+    public:
+        void Upload();
+        void Render();
 
 #ifdef PLUGINS
 		int vertexNum;

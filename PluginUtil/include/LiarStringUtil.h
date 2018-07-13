@@ -7,6 +7,11 @@
 #include <impexp.h>
 #include <iparamb2.h>
 #include <iparamm2.h>
+#endif
+
+#ifdef __APPLE__
+#include <cctype>
+#include <algorithm>
 #else
 #include <cctype>
 #include <algorithm>
@@ -76,6 +81,7 @@ namespace Liar
 #endif // !PLUGINS
 
 
+#ifndef __APPLE__
 		static void WChar_tToString(const wchar_t* wchar, std::string& out)
 		{
 			DWORD dwNum = WideCharToMultiByte(CP_OEMCP, NULL, wchar, -1, NULL, 0, NULL, FALSE);
@@ -84,6 +90,7 @@ namespace Liar
 			out = psText;
 			delete[] psText;
 		}
+#endif
 
 		static void StringToUpper(std::string& name)
 		{
