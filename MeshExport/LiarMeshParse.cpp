@@ -6,6 +6,8 @@ namespace Liar
 	{
 		m_allMeshs = new std::vector<Liar::LiarMesh*>();
 		m_meshSize = 0;
+
+		liarPluginCfg = new Liar::PluginCfg();
 	}
 
 
@@ -14,6 +16,8 @@ namespace Liar
 		EraseMeshIndex(0);
 		std::vector<Liar::LiarMesh*>().swap(*m_allMeshs);
 		delete m_allMeshs;
+
+		delete liarPluginCfg;
 	}
 
 	void LiarMeshParse::SetControl(const TCHAR* name, ExpInterface* ei, Interface* ip, BOOL suppressPrompts, DWORD options)
@@ -93,8 +97,6 @@ namespace Liar
 	// ========================= 解析要用到的结构 ==========================
 	void LiarMeshParse::ParseLiarMesh(Liar::LiarMesh* lmesh, INode* node, Mesh* mesh, bool zy)
 	{
-		Liar::StringUtil::WChar_tToString(node->GetName(), lmesh->nodeName);
-
 		lmesh->faceNum = mesh->getNumFaces();
 		lmesh->vertexNum = mesh->getNumVerts();
 

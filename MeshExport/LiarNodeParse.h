@@ -4,6 +4,8 @@
 #include <triobj.h>
 #include <maxapi.h>
 
+#include <LiarMesh.h>
+
 namespace Liar
 {
 	class LiarMeshParse;
@@ -30,7 +32,8 @@ namespace Liar
 		void ParseNode(INode*, LiarMeshParse*, int&, bool zy = true);
 
 	private:
-		void ParseSubNode(INode*, LiarMeshParse*, int&, bool zy = true);
-		void ParseGeometry(INode*, LiarMeshParse*, int&, bool zy = true);
+		Liar::LiarMesh* ParseSubNode(INode*, LiarMeshParse*, int&, Liar::LiarMesh* p = nullptr, bool zy = true);
+		void ParseChild(INode*, LiarMeshParse*, int&, Liar::LiarMesh* p = nullptr, bool zy = true);
+		Liar::LiarMesh* ParseGeometry(INode*, LiarMeshParse*, int&, Liar::LiarMesh* p = nullptr, bool zy = true);
 	};
 }

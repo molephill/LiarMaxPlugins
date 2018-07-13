@@ -2,6 +2,7 @@
 #include "LiarNodeParse.h"
 #include "LiarMesh.h"
 #include <LiarPluginUtil.h>
+#include "PluginCfg.h"
 
 namespace Liar
 {
@@ -25,8 +26,6 @@ namespace Liar
 		void SetControl(const TCHAR* name, ExpInterface* ei, Interface* ip, BOOL suppressPrompts, DWORD options);
 		int ParseNode(bool zy = true);
 
-		std::string& GetExportPathName() { return m_szExportPath; };
-
 	private:
 		void EraseMeshIndex(int);
 
@@ -34,6 +33,9 @@ namespace Liar
 		Interface* GetInterface() { return m_pInterface; };
 		ExpInterface* GetExpInterface() { return m_pExpInterface; };
 		int GetMeshSize() const { return m_meshSize; };
+		std::string& GetExportPathName() { return m_szExportPath; };
+
+		Liar::PluginCfg* liarPluginCfg;
 
 		Liar::LiarMesh* GetOrNewMesh(int&);
 		Liar::LiarMesh* GetMesh(int);
