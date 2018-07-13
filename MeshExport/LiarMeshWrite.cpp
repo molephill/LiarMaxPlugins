@@ -53,11 +53,15 @@ namespace Liar
 
 	void LiarMeshWrite::WriteLiarGeometery(Liar::LiarGeometry* geo, FILE* hFile)
 	{
+		// write indices count;
+		int indiceSize = static_cast<int>(geo->GetIndicesSize());
+		fwrite(&indiceSize, sizeof(int), 1, hFile);
+		// write indices
+		fwrite(&(geo->GetIndices()->front()), sizeof(unsigned int), indiceSize, hFile);
+
 		int bufferSize = geo->GetBufferSize();
 		// write bufferSize;
 		fwrite(&bufferSize, sizeof(int), 1, hFile);
-		// write indices
-		fwrite(&(geo->GetIndices()->front()), sizeof(unsigned int), geo->GetIndicesSize(), hFile);
 		// write buffer
 		for (int i = 0; i < bufferSize; ++i)
 		{

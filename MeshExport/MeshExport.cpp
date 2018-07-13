@@ -110,11 +110,11 @@ namespace Liar
 			Liar::LiarMesh* mesh = m_meshParse->GetMesh(i);
 			if (mesh)
 			{
-				sprintf(tText, "导出对象<%s>.............", mesh->nodeName.c_str());
+				sprintf(tText, "导出对象<%s>.............", mesh->meshName.c_str());
 				AddStrToOutPutListBox(tText);
 				sprintf(tText, "对应材质<%s>", mesh->GetMaterialName().c_str());
 				AddStrToOutPutListBox(tText);
-				sprintf(tText, "模型<%s> 顶点数 :<%d> 面数:<%d>", mesh->nodeName.c_str(), mesh->vertexNum, mesh->faceNum);
+				sprintf(tText, "模型<%s> 顶点数 :<%d> 面数:<%d>", mesh->meshName.c_str(), mesh->vertexNum, mesh->faceNum);
 				AddStrToOutPutListBox(tText);
 			}
 		}
