@@ -101,5 +101,12 @@ namespace Liar
 		{
 			std::transform(strExt.begin(), strExt.end(), strExt.begin(), ::tolower);
 		}
+        
+        static std::string GetSourcePath(const char* source, const char* base)
+        {
+            std::string sourceStr = std::string(source);
+            std::string baseStr = std::string(base);
+            return sourceStr + baseStr;
+        }
 	};
 }

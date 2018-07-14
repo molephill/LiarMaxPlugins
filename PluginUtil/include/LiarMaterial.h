@@ -58,6 +58,9 @@ namespace Liar
 
 		int GetTexSize() { return m_textureSize; };
 		void SetTexSize(int v) { m_textureSize = v; };
+        
+    public:
+        void Upload();
 
 #ifdef PLUGINS
 	public:
