@@ -11,14 +11,14 @@ namespace Liar
 	public:
 
 		/// ======================= p3 - color ==================================
-		static void ParseColor(Liar::LiarPoint3* p3, Color color)
+		static void ParseColor(Liar::Vector3D* p3, Color color)
 		{
 			p3->x = color.r;
 			p3->y = color.g;
 			p3->z = color.b;
 		}
 
-		static void ParseColor(Liar::LiarPoint3& p3, Color color)
+		static void ParseColor(Liar::Vector3D& p3, Color color)
 		{
 			p3.x = color.r;
 			p3.y = color.g;
@@ -28,21 +28,21 @@ namespace Liar
 
 
 		/// ======================= p3 - p3 ==================================
-		static void ParsePoint3(Liar::LiarPoint3* p3, Point3 color)
+		static void ParsePoint3(Liar::Vector3D* p3, Point3 color)
 		{
 			p3->x = color.x;
 			p3->y = color.y;
 			p3->z = color.z;
 		}
 
-		static void ParsePoint3(Liar::LiarPoint3& p3, Point3 color)
+		static void ParsePoint3(Liar::Vector3D& p3, Point3 color)
 		{
 			p3.x = color.x;
 			p3.y = color.y;
 			p3.z = color.z;
 		}
 
-		static void ParsePoint3(Liar::LiarPoint3* p3, Point3 color, bool zy)
+		static void ParsePoint3(Liar::Vector3D* p3, Point3 color, bool zy)
 		{
 			if (zy)
 			{
@@ -56,7 +56,7 @@ namespace Liar
 			}
 		}
 
-		static void ParsePoint3(Liar::LiarPoint3& p3, Point3 color, bool zy)
+		static void ParsePoint3(Liar::Vector3D& p3, Point3 color, bool zy)
 		{
 			if (zy)
 			{
@@ -71,19 +71,19 @@ namespace Liar
 		}
 		/// ======================= p3 - p3 ==================================
 
-		static void ParsePoint2(Liar::LiarPoint2* p2, Point2 point)
+		static void ParsePoint2(Liar::Vector2D* p2, Point2 point)
 		{
 			p2->x = point.x;
 			p2->y = point.y;
 		}
 
-		static void ParsePoint3(Liar::LiarPoint2* p2, Point3 point)
+		static void ParsePoint3(Liar::Vector2D* p2, Point3 point)
 		{
 			p2->x = point.x;
 			p2->y = point.y;
 		}
 
-		static void ParsePoint2(Liar::LiarPoint2* p2, Point2 point, bool delV)
+		static void ParsePoint2(Liar::Vector2D* p2, Point2 point, bool delV)
 		{
 			if (delV)
 			{
@@ -96,7 +96,7 @@ namespace Liar
 			}
 		}
 
-		static void ParsePoint3(Liar::LiarPoint2* p2, Point3 point, bool delV)
+		static void ParsePoint3(Liar::Vector2D* p2, Point3 point, bool delV)
 		{
 			if (delV)
 			{
@@ -110,19 +110,19 @@ namespace Liar
 		}
 
 		// ============================================================================
-		static void ParsePoint2(Liar::LiarPoint2& p2, Point2 point)
+		static void ParsePoint2(Liar::Vector2D& p2, Point2 point)
 		{
 			p2.x = point.x;
 			p2.y = point.y;
 		}
 
-		static void ParsePoint3(Liar::LiarPoint2& p2, Point3 point)
+		static void ParsePoint3(Liar::Vector2D& p2, Point3 point)
 		{
 			p2.x = point.x;
 			p2.y = point.y;
 		}
 
-		static void ParsePoint2(Liar::LiarPoint2& p2, Point2 point, bool delV)
+		static void ParsePoint2(Liar::Vector2D& p2, Point2 point, bool delV)
 		{
 			if (delV)
 			{
@@ -135,7 +135,7 @@ namespace Liar
 			}
 		}
 
-		static void ParsePoint3(Liar::LiarPoint2& p2, Point3 point, bool delV)
+		static void ParsePoint3(Liar::Vector2D& p2, Point3 point, bool delV)
 		{
 			if (delV)
 			{

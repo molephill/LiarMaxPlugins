@@ -2,12 +2,13 @@
 
 namespace Liar
 {
+
 	LiarVertexBuffer::LiarVertexBuffer()
 	{
-		position = new Liar::LiarPoint3();
-		normal = new Liar::LiarPoint3();
-		color = new Liar::LiarPoint3();
-		uv = new LiarPoint2();
+		position = new Liar::Vector3D();
+		normal = new Liar::Vector3D();
+		color = new Liar::Vector3D();
+		uv = new Liar::Vector2D();
 	}
 
 

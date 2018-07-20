@@ -7,10 +7,6 @@
 #include <LiarMaterial.h>
 #include "LiarVertexBuffer.h"
 
-#ifndef PLUGINS
-#include "Define.h"
-#endif
-
 namespace Liar
 {
 

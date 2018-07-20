@@ -20,9 +20,9 @@ namespace Liar
 	private:
 		std::string m_name;
 
-		Liar::LiarPoint3* m_ambient;
-		Liar::LiarPoint3* m_diffuse;
-		Liar::LiarPoint3* m_specular;
+		Liar::Vector3D* m_ambient;
+		Liar::Vector3D* m_diffuse;
+		Liar::Vector3D* m_specular;
 		float m_shininess;
 
 	public:
@@ -30,9 +30,9 @@ namespace Liar
 		void SetPath(char* v) { m_name = v; };
 		void SetPath(const std::string& v) { m_name = v; };
 
-		Liar::LiarPoint3* GetAmbient() { return m_ambient; };
-		Liar::LiarPoint3* GetDiffuse() { return m_diffuse; };
-		Liar::LiarPoint3* GetSpecular() { return m_specular; };
+		Liar::Vector3D* GetAmbient() { return m_ambient; };
+		Liar::Vector3D* GetDiffuse() { return m_diffuse; };
+		Liar::Vector3D* GetSpecular() { return m_specular; };
 		float GetShininess() { return m_shininess; };
 		void SetShininess(float v) { m_shininess = v; };
 

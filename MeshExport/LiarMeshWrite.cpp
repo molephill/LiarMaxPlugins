@@ -85,14 +85,14 @@ namespace Liar
 	void LiarMeshWrite::WriteLiarVertexBuffer(Liar::LiarVertexBuffer* buff, FILE* hFile)
 	{
 		// write pos
-		size_t p3Size = sizeof(Liar::LiarPoint3);
+		size_t p3Size = sizeof(Liar::Vector3D);
 		fwrite(buff->position, p3Size, 1, hFile);
 		// write normal
 		fwrite(buff->normal, p3Size, 1, hFile);
 		// write color
 		fwrite(buff->color, p3Size, 1, hFile);
 		// write uv
-		size_t p2Size = sizeof(Liar::LiarPoint2);
+		size_t p2Size = sizeof(Liar::Vector2D);
 		fwrite(buff->uv, p2Size, 1, hFile);
 	}
 
@@ -102,7 +102,7 @@ namespace Liar
 		std::string& texName = tex->GetName();
 		//fwrite(&texName, sizeof(std::string), 1, hFile);
 		WriteString(texName, hFile);
-		size_t p3Size = sizeof(Liar::LiarPoint3);
+		size_t p3Size = sizeof(Liar::Vector3D);
 		// write Ambient
 		fwrite(tex->GetAmbient(), p3Size, 1, hFile);
 		// write Diffuse

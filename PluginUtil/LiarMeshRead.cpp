@@ -80,7 +80,7 @@ namespace Liar
 
 	void LiarMeshRead::ReadLiarVertexBuffer(Liar::LiarVertexBuffer* buff, FILE* pFile)
 	{
-		size_t p3Size = sizeof(Liar::LiarPoint3);
+		size_t p3Size = sizeof(Liar::Vector3D);
 		// write pos
 		fread(buff->position, p3Size, 1, pFile);
 		// write normal
@@ -88,7 +88,7 @@ namespace Liar
 		// write color
 		fread(buff->color, p3Size, 1, pFile);
 		// write uv
-		size_t p2Size = sizeof(Liar::LiarPoint2);
+		size_t p2Size = sizeof(Liar::Vector2D);
 		fread(buff->uv, p2Size, 1, pFile);
 	}
 
@@ -98,7 +98,7 @@ namespace Liar
 		//fread(&(tex->GetName()), sizeof(std::string), 1, pFile);
 		ReadString(tex->GetName(), pFile);
 
-		size_t p3Size = sizeof(Liar::LiarPoint3);
+		size_t p3Size = sizeof(Liar::Vector3D);
 		// write Ambient
 		fread(tex->GetAmbient(), p3Size, 1, pFile);
 		// write Diffuse

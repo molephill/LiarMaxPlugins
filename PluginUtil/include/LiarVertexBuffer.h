@@ -1,31 +1,9 @@
 #pragma once
 
-#include <vector>
+#include "Vectors.h"
 
 namespace Liar
 {
-	class LiarPoint3
-	{
-	public:
-		LiarPoint3() :x(0.0f), y(0.0f), z(0.0f) {};
-
-	public:
-		float x;
-		float y;
-		float z;
-	};
-
-	class LiarPoint2
-	{
-	public:
-		LiarPoint2() :x(0.0f), y(0.0f) {};
-
-	public:
-		float x;
-		float y;
-
-	};
-
 	class LiarVertexBuffer
 	{
 	public:
@@ -33,10 +11,10 @@ namespace Liar
 		~LiarVertexBuffer();
 
 	public:
-		Liar::LiarPoint3* position;
-		Liar::LiarPoint3* normal;
-		Liar::LiarPoint3* color;
-		Liar::LiarPoint2* uv;
+		Liar::Vector3D* position;
+		Liar::Vector3D* normal;
+		Liar::Vector3D* color;
+		Liar::Vector2D* uv;
 
 	};
 }

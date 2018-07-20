@@ -7,9 +7,9 @@ namespace Liar
 
 	LiarTexture::LiarTexture():m_name(""), m_shininess(0.0f)
 	{
-		m_ambient = new Liar::LiarPoint3();
-		m_diffuse = new Liar::LiarPoint3();
-		m_specular = new Liar::LiarPoint3();
+		m_ambient = new Liar::Vector3D();
+		m_diffuse = new Liar::Vector3D();
+		m_specular = new Liar::Vector3D();
 	}
 
 	LiarTexture::~LiarTexture()
