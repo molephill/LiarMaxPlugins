@@ -15,6 +15,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include <Vectors.h>
+#include <PluginDefine.h>
 
 #include <iostream>
 #include <iomanip>
@@ -168,6 +169,7 @@ namespace Liar
 	///////////////////////////////////////////////////////////////////////////
 	class Matrix4
 	{
+	public:
 		Matrix4();  // init with identity
 		Matrix4(const float src[16]);
 		Matrix4(const std::vector<float>&);
@@ -219,6 +221,7 @@ namespace Liar
 		Liar::Matrix4&    Translate(const Liar::Vector3D& v);            //
 		Liar::Matrix4&    Rotate(float angle, const Liar::Vector3D& axis); // rotate angle(degree) along the given axix
 		Liar::Matrix4&    Rotate(float angle, float x, float y, float z);
+		Liar::Matrix4&	  Rotate(float angleX, float angleY, float angleZ);
 		Liar::Matrix4&    RotateX(float angle);                   // rotate on X-axis with degree
 		Liar::Matrix4&    RotateY(float angle);                   // rotate on Y-axis with degree
 		Liar::Matrix4&    RotateZ(float angle);                   // rotate on Z-axis with degree

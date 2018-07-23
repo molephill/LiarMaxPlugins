@@ -1,9 +1,5 @@
 #include "Matrices.h"
 
-const float DEG2RAD = 3.141593f / 180.0f;
-const float RAD2DEG = 180.0f / 3.141593f;
-const float EPSILON = 0.00001f;
-
 namespace Liar
 {
 	///////////////////////////////////////////////////////////////////////////////
@@ -948,6 +944,15 @@ namespace Liar
 		return *this;
 	}
 
+	Matrix4& Matrix4::Rotate(float angleX, float angleY, float angleZ)
+	{
+		RotateZ(angleZ);
+		RotateY(angleY);
+		RotateX(angleX);
+
+		return *this;
+	}
+
 	Matrix4& Matrix4::RotateX(float angle)
 	{
 		float c = cosf(angle * DEG2RAD);
@@ -1102,6 +1107,7 @@ namespace Liar
 
 		// re-compute up vector
 		forward->CrossC(*tmp);
+		forward->Normalize();
 		//up.normalize();
 
 		// NOTE: overwrite rotation and scale info of the current matrix
@@ -1147,17 +1153,17 @@ namespace Liar
 		this->SetCol(0, *left);
 		this->SetCol(2, *forward);
 
-// compute orthonormal up vector
-forward->CrossC(*left);
-forward->Normalize();
+		// compute orthonormal up vector
+		forward->CrossC(*left);
+		forward->Normalize();
 
-// NOTE: overwrite rotation and scale info of the current matrix
-this->SetCol(1, *forward);
+		// NOTE: overwrite rotation and scale info of the current matrix
+		this->SetCol(1, *forward);
 
-delete forward;
-delete left;
+		delete forward;
+		delete left;
 
-return *this;
+		return *this;
 	}
 
 
