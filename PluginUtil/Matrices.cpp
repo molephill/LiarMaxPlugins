@@ -7,7 +7,7 @@ namespace Liar
 	///////////////////////////////////////////////////////////////////////////////
 	Matrix2& Matrix2::Transpose()
 	{
-		std::swap(m1, m2);
+		std::swap(m.s[1], m.s[2]);
 		return *this;
 	}
 
@@ -16,7 +16,7 @@ namespace Liar
 	///////////////////////////////////////////////////////////////////////////////
 	float Matrix2::GetDeterminant() const
 	{
-		return m0 * m3 - m1 * m2;
+		return m.s[0] * m.s[3] - m.s[1] * m.s[2];
 	}
 
 	///////////////////////////////////////////////////////////////////////////////
@@ -31,12 +31,12 @@ namespace Liar
 			return Identity();
 		}
 
-		float tmp = m1;   // copy the first element
+		float tmp = m.s[1];   // copy the first element
 		float invDeterminant = 1.0f / determinant;
-		m0 = invDeterminant * m3;
-		m1 = -invDeterminant * m1;
-		m2 = -invDeterminant * m2;
-		m3 = invDeterminant * tmp;
+		m.s[0] = invDeterminant * m.s[3];
+		m.s[1] = -invDeterminant * m.s[1];
+		m.s[2] = -invDeterminant * m.s[2];
+		m.s[3] = invDeterminant * tmp;
 
 		return *this;
 	}
@@ -50,119 +50,86 @@ namespace Liar
 	float Matrix2::GetAngle() const
 	{
 		// angle between -pi ~ +pi (-180 ~ +180)
-		return RAD2DEG * atan2f(m1, m0);
+		return RAD2DEG * atan2f(m.s[1], m.s[0]);
 	}
 
 	void Matrix2::SetRow(int index, const float row[2])
 	{
-		SetRowElement(index, row[0], row[1]);
+		m.s[index] = row[0];  m.s[index + 2] = row[1];
 	}
 
 	void Matrix2::SetRow(int index, const std::vector<float>& row)
 	{
-		SetRowElement(index, row[0], row[1]);
+		m.s[index] = row[0];  m.s[index + 2] = row[1];
 	}
 
-	void Matrix2::SetRow(int index, const Liar::Vector2D& row)
+	void Matrix2::SetRow(int index, const Liar::Vector2D& v)
 	{
-		SetRowElement(index, row.x, row.y);
+		m.s[index] = v.x;  m.s[index + 2] = v.y;
 	}
 
-	void Matrix2::SetCol(int index, const float row[2])
+	void Matrix2::SetCol(int index, const float col[2])
 	{
-		SetColElement(index, row[0], row[1]);
+		m.s[index * 2] = col[0];  m.s[index * 2 + 1] = col[1];
 	}
 
-	void Matrix2::SetCol(int index, const std::vector<float>& row)
+	void Matrix2::SetCol(int index, const std::vector<float>& col)
 	{
-		SetColElement(index, row[0], row[1]);
+		m.s[index * 2] = col[0];  m.s[index * 2 + 1] = col[1];
 	}
 
-	void Matrix2::SetCol(int index, const Liar::Vector2D& row)
+	void Matrix2::SetCol(int index, const Liar::Vector2D& v)
 	{
-		SetColElement(index, row.x, row.y);
-	}
-
-	void Matrix2::SetRowElement(int index, float v1, float v2)
-	{
-		if (index == 0)
-		{
-			m0 = v1;
-			m2 = v2;
-		}
-		else
-		{
-			m1 = v1;
-			m3 = v2;
-		}
-	}
-
-	void Matrix2::SetColElement(int index, float v1, float v2)
-	{
-		if (index == 0)
-		{
-			m0 = v1;
-			m1 = v2;
-		}
-		else
-		{
-			m2 = v1;
-			m3 = v2;
-		}
-	}
-
-	void Matrix2::GetRawData(std::vector<float>& out)
-	{
-		out = { m0, m1, m2, m3 };
+		m.s[index * 2] = v.x;  m.s[index * 2 + 1] = v.y;
 	}
 
 	// add rhs
 	void Matrix2::Add(const Liar::Matrix2& rhs)
 	{
-		m0 += rhs.m0;
-		m1 += rhs.m1;
-		m2 += rhs.m2;
-		m3 += rhs.m3;
+		m.s[0] += rhs[0];
+		m.s[1] += rhs[1];
+		m.s[2] += rhs[2];
+		m.s[3] += rhs[3];
 	}
 
 	// subtract rhs
 	void Matrix2::Sub(const Liar::Matrix2& rhs)
 	{
-		m0 -= rhs.m0;
-		m1 -= rhs.m1;
-		m2 -= rhs.m2;
-		m3 -= rhs.m3;
+		m.s[0] -= rhs[0];
+		m.s[1] -= rhs[1];
+		m.s[2] -= rhs[2];
+		m.s[3] -= rhs[3];
 	}
 
 	// multiplication: M3 = M1 * M2
 	void Matrix2::Mul(const Liar::Matrix2& rhs)
 	{
-		float t0 = m0, t1 = m1, t2 = m2, t3 = m3;
-		m0 = t0 * rhs.m0 + t2 * rhs.m1;
-		m1 = t1 * rhs.m0 + t3 * rhs.m1;
-		m2 = t0 * rhs.m2 + t2 * rhs.m3;
-		m3 = t1 * rhs.m2 + t3 * rhs.m3;
+		float t0 = m.s[0], t1 = m.s[1], t2 = m.s[2], t3 = m.s[3];
+		m.s[0] = t0 * rhs[0] + t2 * rhs[1];
+		m.s[1] = t1 * rhs[0] + t3 * rhs[1];
+		m.s[2] = t0 * rhs[2] + t2 * rhs[3];
+		m.s[3] = t1 * rhs[2] + t3 * rhs[3];
 	}
 
 	// multiplication: M1' = M1 * M2
 	void Matrix2::Mul(Liar::Vector2D& rhs)
 	{
 		float tx = rhs.x, ty = rhs.y;
-		rhs.x = m0 * tx + m2 * ty;
-		rhs.y = m1 * tx + m3 * ty;
+		rhs.x = m.s[0] * tx + m.s[2] * ty;
+		rhs.y = m.s[1] * tx + m.s[3] * ty;
 	}
 
 	// multiplication: M1' = M1 * M2
 	void Matrix2::Mul(const Liar::Vector2D& rhs, Liar::Vector2D& out)
 	{
-		out.x = m0 * rhs.x + m2 * rhs.y;
-		out.y = m1 * rhs.x + m3 * rhs.y;
+		out.x = m.s[0] * rhs.x + m.s[2] * rhs.y;
+		out.y = m.s[1] * rhs.x + m.s[3] * rhs.y;
 	}
 
 	void Matrix2::Mul(float v)
 	{
-		m0 *= v; m1 *= v;
-		m2 *= v; m3 *= v;
+		m.s[0] *= v; m.s[1] *= v;
+		m.s[2] *= v; m.s[3] *= v;
 	}
 
 
@@ -171,10 +138,9 @@ namespace Liar
 	///////////////////////////////////////////////////////////////////////////////
 	Matrix3& Matrix3::Transpose()
 	{
-		float tmp = m1;
-		tmp = m1; m1 = m3; m3 = tmp;
-		tmp = m2; m2 = m6; m6 = tmp;
-		tmp = m5; m5 = m7; m7 = tmp;
+		std::swap(m.s[1], m.s[3]);
+		std::swap(m.s[2], m.s[6]);
+		std::swap(m.s[5], m.s[7]);
 		return *this;
 	}
 
@@ -183,9 +149,9 @@ namespace Liar
 	///////////////////////////////////////////////////////////////////////////////
 	float Matrix3::GetDeterminant() const
 	{
-		return  m0 * (m4 * m8 - m5 * m7) -
-				m1 * (m3 * m8 - m5 * m6) +
-				m2 * (m3 * m7 - m4 * m6);
+		return m.s[0] * (m.s[4] * m.s[8] - m.s[5] * m.s[7]) -
+				m.s[1] * (m.s[3] * m.s[8] - m.s[5] * m.s[6]) +
+				m.s[2] * (m.s[3] * m.s[7] - m.s[4] * m.s[6]);
 	}
 
 	///////////////////////////////////////////////////////////////////////////////
@@ -201,18 +167,18 @@ namespace Liar
 		float determinant, invDeterminant;
 		float tmp0, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8;
 
-		tmp0 = m4 * m8 - m5 * m7;
-		tmp1 = m7 * m2 - m8 * m1;
-		tmp2 = m1 * m5 - m2 * m4;
-		tmp3 = m5 * m6 - m3 * m8;
-		tmp4 = m0 * m8 - m2 * m6;
-		tmp5 = m2 * m3 - m0 * m5;
-		tmp6 = m3 * m7 - m4 * m6;
-		tmp7 = m6 * m1 - m7 * m0;
-		tmp8 = m0 * m4 - m1 * m3;
+		tmp0 = m.s[4] * m.s[8] - m.s[5] * m.s[7];
+		tmp1 = m.s[7] * m.s[2] - m.s[8] * m.s[1];
+		tmp2 = m.s[1] * m.s[5] - m.s[2] * m.s[4];
+		tmp3 = m.s[5] * m.s[6] - m.s[3] * m.s[8];
+		tmp4 = m.s[0] * m.s[8] - m.s[2] * m.s[6];
+		tmp5 = m.s[2] * m.s[3] - m.s[0] * m.s[5];
+		tmp6 = m.s[3] * m.s[7] - m.s[4] * m.s[6];
+		tmp7 = m.s[6] * m.s[1] - m.s[7] * m.s[0];
+		tmp8 = m.s[0] * m.s[4] - m.s[1] * m.s[3];
 
 		// check determinant if it is 0
-		determinant = m0 * tmp0 + m1 * tmp3 + m2 * tmp6;
+		determinant = m.s[0] * tmp0 + m.s[1] * tmp3 + m.s[2] * tmp6;
 		if (fabs(determinant) <= EPSILON)
 		{
 			return Identity(); // cannot inverse, make it idenety matrix
@@ -220,15 +186,15 @@ namespace Liar
 
 		// divide by the determinant
 		invDeterminant = 1.0f / determinant;
-		m0 = invDeterminant * tmp0;
-		m1 = invDeterminant * tmp1;
-		m2 = invDeterminant * tmp2;
-		m3 = invDeterminant * tmp3;
-		m4 = invDeterminant * tmp4;
-		m5 = invDeterminant * tmp5;
-		m6 = invDeterminant * tmp6;
-		m7 = invDeterminant * tmp7;
-		m8 = invDeterminant * tmp8;
+		m.s[0] = invDeterminant * tmp0;
+		m.s[1] = invDeterminant * tmp1;
+		m.s[2] = invDeterminant * tmp2;
+		m.s[3] = invDeterminant * tmp3;
+		m.s[4] = invDeterminant * tmp4;
+		m.s[5] = invDeterminant * tmp5;
+		m.s[6] = invDeterminant * tmp6;
+		m.s[7] = invDeterminant * tmp7;
+		m.s[8] = invDeterminant * tmp8;
 
 		return *this;
 	}
@@ -263,8 +229,8 @@ namespace Liar
 										// find yaw (around y-axis) first
 										// NOTE: asin() returns -90~+90, so correct the angle range -180~+180
 										// using z value of forward vector
-		yaw = RAD2DEG * asinf(m6);
-		if (m8 < 0)
+		yaw = RAD2DEG * asinf(m.s[6]);
+		if (m.s[8] < 0)
 		{
 			if (yaw >= 0) yaw = 180.0f - yaw;
 			else         yaw = -180.0f - yaw;
@@ -272,15 +238,15 @@ namespace Liar
 
 		// find roll (around z-axis) and pitch (around x-axis)
 		// if forward vector is (1,0,0) or (-1,0,0), then m[0]=m[4]=m[9]=m[10]=0
-		if (m0 > -EPSILON && m0 < EPSILON)
+		if (m.s[0] > -EPSILON && m.s[0] < EPSILON)
 		{
 			roll = 0;  //@@ assume roll=0
-			pitch = RAD2DEG * atan2f(m1, m4);
+			pitch = RAD2DEG * atan2f(m.s[1], m.s[4]);
 		}
 		else
 		{
-			roll = RAD2DEG * atan2f(-m3, m0);
-			pitch = RAD2DEG * atan2f(-m7, m8);
+			roll = RAD2DEG * atan2f(-m.s[3], m.s[0]);
+			pitch = RAD2DEG * atan2f(-m.s[7], m.s[8]);
 		}
 		out.x = pitch;
 		out.y = yaw;
@@ -289,138 +255,96 @@ namespace Liar
 
 	void Matrix3::Add(const Liar::Matrix3& rhs)
 	{
-		m0 += rhs.m0;
-		m1 += rhs.m1;
-		m2 += rhs.m2;
-		m3 += rhs.m1;
-		m4 += rhs.m4;
-		m5 += rhs.m5;
-		m6 += rhs.m6;
-		m7 += rhs.m7;
-		m8 += rhs.m8;
+		m.s[0] += rhs[0];
+		m.s[1] += rhs[1];
+		m.s[2] += rhs[2];
+		m.s[3] += rhs[1];
+		m.s[4] += rhs[4];
+		m.s[5] += rhs[5];
+		m.s[6] += rhs[6];
+		m.s[7] += rhs[7];
+		m.s[8] += rhs[8];
 	}
 
 	void Matrix3::Sub(const Liar::Matrix3& rhs)
 	{
-		m0 -= rhs.m0;
-		m1 -= rhs.m1;
-		m2 -= rhs.m2;
-		m3 -= rhs.m1;
-		m4 -= rhs.m4;
-		m5 -= rhs.m5;
-		m6 -= rhs.m6;
-		m7 -= rhs.m7;
-		m8 -= rhs.m8;
+		m.s[0] -= rhs[0];
+		m.s[1] -= rhs[1];
+		m.s[2] -= rhs[2];
+		m.s[3] -= rhs[1];
+		m.s[4] -= rhs[4];
+		m.s[5] -= rhs[5];
+		m.s[6] -= rhs[6];
+		m.s[7] -= rhs[7];
+		m.s[8] -= rhs[8];
 	}
 
 	void Matrix3::Mul(const Liar::Matrix3& rhs)
 	{
-		float t0 = m0, t1 = m1, t2 = m2, t3 = m3, t4 = m4, t5 = m5, t6 = m6, t7 = m7, t8 = m8;
-		m0 = t0 * rhs.m0 + t3 * rhs.m1 + t6 * rhs.m2;
-		m1 = t1 * rhs.m0 + t4 * rhs.m1 + t7 * rhs.m2;
-		m2 = t2 * rhs.m0 + t5 * rhs.m1 + t8 * rhs.m2;
-		m3 = t0 * rhs.m3 + t3 * rhs.m4 + t6 * rhs.m5;
-		m4 = t1 * rhs.m3 + t4 * rhs.m4 + t7 * rhs.m5;
-		m5 = t2 * rhs.m3 + t5 * rhs.m4 + t8 * rhs.m5;
-		m6 = t0 * rhs.m6 + t3 * rhs.m7 + t6 * rhs.m8;
-		m7 = t1 * rhs.m6 + t4 * rhs.m7 + t7 * rhs.m8;
-		m8 = t2 * rhs.m6 + t5 * rhs.m7 + t8 * rhs.m8;
+		float t0 = m.s[0], t1 = m.s[1], t2 = m.s[2], t3 = m.s[3], t4 = m.s[4], t5 = m.s[5], t6 = m.s[6], t7 = m.s[7], t8 = m.s[8];
+		m.s[0] = t0 * rhs[0] + t3 * rhs[1] + t6 * rhs[2];
+		m.s[1] = t1 * rhs[0] + t4 * rhs[1] + t7 * rhs[2];
+		m.s[2] = t2 * rhs[0] + t5 * rhs[1] + t8 * rhs[2];
+		m.s[3] = t0 * rhs[3] + t3 * rhs[4] + t6 * rhs[5];
+		m.s[4] = t1 * rhs[3] + t4 * rhs[4] + t7 * rhs[5];
+		m.s[5] = t2 * rhs[3] + t5 * rhs[4] + t8 * rhs[5];
+		m.s[6] = t0 * rhs[6] + t3 * rhs[7] + t6 * rhs[8];
+		m.s[7] = t1 * rhs[6] + t4 * rhs[7] + t7 * rhs[8];
+		m.s[8] = t2 * rhs[6] + t5 * rhs[7] + t8 * rhs[8];
 	}
 
 	void Matrix3::Mul(Liar::Vector3D& rhs)
 	{
 		float tx = rhs.x, ty = rhs.y, tz = rhs.z;
-		rhs.x = tx*m0 + ty*m1 + tz*m2;
-		rhs.y = tx*m3 + ty*m4 + tz*m5;
-		rhs.z = tx*m6 + ty*m7 + tz*m8;
+		rhs.x = tx*m.s[0] + ty*m.s[1] + tz*m.s[2];
+		rhs.y = tx*m.s[3] + ty*m.s[4] + tz*m.s[5];
+		rhs.z = tx*m.s[6] + ty*m.s[7] + tz*m.s[8];
 	}
 
 	void Matrix3::Mul(const Liar::Vector3D& rhs, Liar::Vector3D& out)
 	{
-		out.x = rhs.x*m0 + rhs.y*m1 + rhs.z*m2;
-		out.y = rhs.x*m3 + rhs.y*m4 + rhs.z*m5;
-		out.z = rhs.x*m6 + rhs.y*m7 + rhs.z*m8;
+		out.x = rhs.x*m.s[0] + rhs.y*m.s[1] + rhs.z*m.s[2];
+		out.y = rhs.x*m.s[3] + rhs.y*m.s[4] + rhs.z*m.s[5];
+		out.z = rhs.x*m.s[6] + rhs.y*m.s[7] + rhs.z*m.s[8];
+	}
+
+	void Matrix3::Mul(float v)
+	{
+		m.s[0] *= v; m.s[1] *= v; m.s[2] *= v;
+		m.s[3] *= v; m.s[4] *= v; m.s[5] *= v;
+		m.s[6] *= v; m.s[7] *= v; m.s[8] *= v;
 	}
 
 	//=============================================================================
 
 	void Matrix3::SetRow(int index, const float row[3])
 	{
-		SetRowElement(index, row[0], row[1], row[2]);
+		m.s[index] = row[0];  m.s[index + 3] = row[1];  m.s[index + 6] = row[2];
 	}
 
 	void Matrix3::SetRow(int index, const std::vector<float>& row)
 	{
-		SetRowElement(index, row[0], row[1], row[2]);
+		m.s[index] = row[0];  m.s[index + 3] = row[1];  m.s[index + 6] = row[2];
 	}
 
-	void Matrix3::SetRow(int index, const Liar::Vector3D& row)
+	void Matrix3::SetRow(int index, const Liar::Vector3D& v)
 	{
-		SetRowElement(index, row.x, row.y, row.z);
+		m.s[index] = v.x;  m.s[index + 3] = v.y;  m.s[index + 6] = v.z;
 	}
 
-	void Matrix3::SetCol(int index, const float row[3])
+	void Matrix3::SetCol(int index, const float col[3])
 	{
-		SetColElement(index, row[0], row[1], row[2]);
+		m.s[index * 3] = col[0];  m.s[index * 3 + 1] = col[1];  m.s[index * 3 + 2] = col[2];
 	}
 
-	void Matrix3::SetCol(int index, const std::vector<float>& row)
+	void Matrix3::SetCol(int index, const std::vector<float>& col)
 	{
-		SetColElement(index, row[0], row[1], row[2]);
+		m.s[index * 3] = col[0];  m.s[index * 3 + 1] = col[1];  m.s[index * 3 + 2] = col[2];
 	}
 
-	void Matrix3::SetCol(int index, const Liar::Vector3D& row)
+	void Matrix3::SetCol(int index, const Liar::Vector3D& v)
 	{
-		SetColElement(index, row.x, row.y, row.z);
-	}
-
-	void Matrix3::SetRowElement(int index, float v1, float v2, float v3)
-	{
-		if (index == 0)
-		{
-			m0 = v1;
-			m3 = v2;
-			m6 = v3;
-		}
-		else if(index == 1)
-		{
-			m1 = v1;
-			m4 = v2;
-			m7 = v3;
-		}
-		else
-		{
-			m2 = v1;
-			m5 = v2;
-			m8 = v3;
-		}
-	}
-
-	void Matrix3::SetColElement(int index, float v1, float v2, float v3)
-	{
-		if (index == 0)
-		{
-			m0 = v1;
-			m1 = v2;
-			m2 = v3;
-		}
-		else if(index == 1)
-		{
-			m3 = v1;
-			m4 = v2;
-			m5 = v3;
-		}
-		else
-		{
-			m6 = v1;
-			m7 = v2;
-			m8 = v3;
-		}
-	}
-
-	void Matrix3::GetRawData(std::vector<float>& out)
-	{
-		out = { m0, m1, m2, m3, m4, m5, m6, m7, m8 };
+		m.s[index * 3] = v.x;  m.s[index * 3 + 1] = v.y;  m.s[index * 3 + 2] = v.z;
 	}
 
 
@@ -429,159 +353,56 @@ namespace Liar
 	///////////////////////////////////////////////////////////////////////////////
 	Matrix4& Matrix4::Transpose()
 	{
-		float tmp = m0;
-		tmp = m0; m0 = m4; m4 = tmp;
-		tmp = m2; m2 = m8; m8 = tmp;
-		tmp = m3; m3 = m12; m12 = tmp;
-		tmp = m6; m6 = m9; m9 = tmp;
-		tmp = m7; m7 = m13; m13 = tmp;
-		tmp = m11; m11 = m14; m14 = tmp;
+		std::swap(m.s[1], m.s[4]);
+		std::swap(m.s[2], m.s[8]);
+		std::swap(m.s[3], m.s[12]);
+		std::swap(m.s[6], m.s[9]);
+		std::swap(m.s[7], m.s[13]);
+		std::swap(m.s[11], m.s[14]);
 
 		return *this;
 	}
 
 	void Matrix4::SetRow(int index, const float row[4])
 	{
-		SetRowElement(index, row[0], row[1], row[2], row[3]);
+		m.s[index] = row[0];  m.s[index + 4] = row[1];  m.s[index + 8] = row[2];  m.s[index + 12] = row[3];
 	}
 
 	void Matrix4::SetRow(int index, const std::vector<float>& row)
 	{
-		SetRowElement(index, row[0], row[1], row[2], row[3]);
+		m.s[index] = row[0];  m.s[index + 4] = row[1];  m.s[index + 8] = row[2];  m.s[index + 12] = row[3];
 	}
 
-	void Matrix4::SetRow(int index, const Liar::Vector4D& row)
+	void Matrix4::SetRow(int index, const Liar::Vector4D& v)
 	{
-		SetRowElement(index, row.x, row.y, row.z, row.w);
+		m.s[index] = v.x;  m.s[index + 4] = v.y;  m.s[index + 8] = v.z;  m.s[index + 12] = v.w;
 	}
 
-	void Matrix4::SetRow(int index, const Liar::Vector3D& row)
+	void Matrix4::SetRow(int index, const Liar::Vector3D& v)
 	{
-		float v4 = 0.0f;
-		if (index == 0)
-		{
-			v4 = m12;
-		}
-		else if (index == 1)
-		{
-			v4 = m13;
-		}
-		else if (index == 2)
-		{
-			v4 = m14;
-		}
-		else
-		{
-			v4 = m15;
-		}
-		SetRowElement(index, row.x, row.y, row.z, v4);
+		m.s[index] = v.x;  m.s[index + 4] = v.y;  m.s[index + 8] = v.z;
 	}
 
-	void Matrix4::SetCol(int index, const float row[4])
+	void Matrix4::SetCol(int index, const float col[4])
 	{
-		SetColElement(index, row[0], row[1], row[2], row[3]);
+		m.s[index * 4] = col[0];  m.s[index * 4 + 1] = col[1];  m.s[index * 4 + 2] = col[2];  m.s[index * 4 + 3] = col[3];
 	}
 
-	void Matrix4::SetCol(int index, const std::vector<float>& row)
+	void Matrix4::SetCol(int index, const std::vector<float>& col)
 	{
-		SetColElement(index, row[0], row[1], row[2], row[3]);
+		m.s[index * 4] = col[0];  m.s[index * 4 + 1] = col[1];  m.s[index * 4 + 2] = col[2];  m.s[index * 4 + 3] = col[3];
 	}
 
-	void Matrix4::SetCol(int index, const Liar::Vector4D& row)
+	void Matrix4::SetCol(int index, const Liar::Vector4D& v)
 	{
-		SetColElement(index, row.x, row.y, row.z, row.w);
+		m.s[index * 4] = v.x;  m.s[index * 4 + 1] = v.y;  m.s[index * 4 + 2] = v.z;  m.s[index * 4 + 3] = v.w;
 	}
 
-	void Matrix4::SetCol(int index, const Liar::Vector3D& row)
+	void Matrix4::SetCol(int index, const Liar::Vector3D& v)
 	{
-		float v4 = 0.0f;
-		if (index == 0)
-		{
-			v4 = m3;
-		}
-		else if (index == 1)
-		{
-			v4 = m7;
-		}
-		else if (index == 2)
-		{
-			v4 = m11;
-		}
-		else
-		{
-			v4 = m15;
-		}
-		SetColElement(index, row.x, row.y, row.z, v4);
+		m.s[index * 4] = v.x;  m.s[index * 4 + 1] = v.y;  m.s[index * 4 + 2] = v.z;
 	}
 
-	void Matrix4::SetRowElement(int index, float v1, float v2, float v3, float v4)
-	{
-		if (index == 0)
-		{
-			m0 = v1;
-			m4 = v2;
-			m8 = v3;
-			m12 = v4;
-		}
-		else if (index == 1)
-		{
-			m1 = v1;
-			m5 = v2;
-			m9 = v3;
-			m13 = v4;
-		}
-		else if(index == 2)
-		{
-			m2 = v1;
-			m6 = v2;
-			m10 = v3;
-			m14 = v4;
-		}
-		else
-		{
-			m3 = v1;
-			m7 = v2;
-			m11 = v3;
-			m15 = v4;
-		}
-	}
-
-	void Matrix4::SetColElement(int index, float v1, float v2, float v3, float v4)
-	{
-		if (index == 0)
-		{
-			m0 = v1;
-			m1 = v2;
-			m2 = v3;
-			m3 = v4;
-		}
-		else if (index == 1)
-		{
-			m4 = v1;
-			m5 = v2;
-			m6 = v3;
-			m7 = v4;
-		}
-		else if(index == 2)
-		{
-			m8 = v1;
-			m9 = v2;
-			m10 = v3;
-			m11 = v4;
-		}
-		else
-		{
-			m12 = v1;
-			m13 = v2;
-			m14 = v3;
-			m15 = v4;
-		}
-	}
-
-	void Matrix4::GetRawData(std::vector<float>& out)
-	{
-		out = { m0, m1, m2, m3, m4, m5, m6, m7, m8, m9, m10, m11, m12, m13, m14, m15 };
-	}
 
 	///////////////////////////////////////////////////////////////////////////////
 	// inverse 4x4 matrix
@@ -590,7 +411,7 @@ namespace Liar
 	{
 		// If the 4th row is [0,0,0,1] then it is affine matrix and
 		// it has no projective transformation.
-		if (m3 == 0 && m7 == 0 && m11 == 0 && m15 == 1)
+		if (m.s[3] == 0 && m.s[7] == 0 && m.s[11] == 0 && m.s[15] == 1)
 			this->InvertAffine();
 		else
 		{
@@ -636,20 +457,20 @@ namespace Liar
 		// | ----+-- |
 		// |  0  | 1 |
 		float tmp;
-		tmp = m1;  m1 = m4;  m4 = tmp;
-		tmp = m2;  m2 = m8;  m8 = tmp;
-		tmp = m6;  m6 = m9;  m9 = tmp;
+		tmp = m.s[1];  m.s[1] = m.s[4];  m.s[4] = tmp;
+		tmp = m.s[2];  m.s[2] = m.s[8];  m.s[8] = tmp;
+		tmp = m.s[6];  m.s[6] = m.s[9];  m.s[9] = tmp;
 
 		// compute translation part -R^T * T
 		// | 0 | -R^T x |
 		// | --+------- |
 		// | 0 |   0    |
-		float x = m12;
-		float y = m13;
-		float z = m14;
-		m12 = -(m0 * x + m4 * y + m8 * z);
-		m13 = -(m1 * x + m5 * y + m9 * z);
-		m14 = -(m2 * x + m6 * y + m10 * z);
+		float x = m.s[12];
+		float y = m.s[13];
+		float z = m.s[14];
+		m.s[12] = -(m.s[0] * x + m.s[4] * y + m.s[8] * z);
+		m.s[13] = -(m.s[1] * x + m.s[5] * y + m.s[9] * z);
+		m.s[14] = -(m.s[2] * x + m.s[6] * y + m.s[10] * z);
 
 		// last row should be unchanged (0,0,0,1)
 
@@ -677,19 +498,19 @@ namespace Liar
 	Matrix4& Matrix4::InvertAffine()
 	{
 		// R^-1
-		Matrix3 r(m0, m1, m2, m4, m5, m6, m8, m9, m11);
+		Matrix3 r(m.s[0], m.s[1], m.s[2], m.s[4], m.s[5], m.s[6], m.s[8], m.s[9], m.s[10]);
 		r.Invert();
-		m0 = r.m0;  m1 = r.m1;  m2 = r.m2;
-		m4 = r.m3;  m5 = r.m4;  m6 = r.m5;
-		m8 = r.m6;  m9 = r.m7;  m10 = r.m8;
+		m.s[0] = r[0];  m.s[1] = r[1];  m.s[2] = r[2];
+		m.s[4] = r[3];  m.s[5] = r[4];  m.s[6] = r[5];
+		m.s[8] = r[6];  m.s[9] = r[7];  m.s[10] = r[8];
 
 		// -R^-1 * T
-		float x = m12;
-		float y = m13;
-		float z = m14;
-		m12 = -(r.m0 * x + r.m3 * y + r.m6 * z);
-		m13 = -(r.m1 * x + r.m4 * y + r.m7 * z);
-		m14 = -(r.m2 * x + r.m5 * y + r.m8 * z);
+		float x = m.s[12];
+		float y = m.s[13];
+		float z = m.s[14];
+		m.s[12] = -(r[0] * x + r[3] * y + r[6] * z);
+		m.s[13] = -(r[1] * x + r[4] * y + r[7] * z);
+		m.s[14] = -(r[2] * x + r[5] * y + r[8] * z);
 
 		// last row should be unchanged (0,0,0,1)
 		//m[3] = m[7] = m[11] = 0.0f;
@@ -721,10 +542,10 @@ namespace Liar
 	Matrix4& Matrix4::InvertProjective()
 	{
 		// partition
-		Matrix2 a(m0, m1, m4, m5);
-		Matrix2 b(m8, m9, m12, m13);
-		Matrix2 c(m2, m3, m6, m7);
-		Matrix2 d(m10, m11, m14, m15);
+		Matrix2 a(m.s[0], m.s[1], m.s[4], m.s[5]);
+		Matrix2 b(m.s[8], m.s[9], m.s[12], m.s[13]);
+		Matrix2 c(m.s[2], m.s[3], m.s[6], m.s[7]);
+		Matrix2 d(m.s[10], m.s[11], m.s[14], m.s[15]);
 
 		// pre-compute repeated parts
 		a.Invert();             // A^-1
@@ -736,7 +557,7 @@ namespace Liar
 		// check determinant if |D - C * A^-1 * B| = 0
 		//NOTE: this function assumes det(A) is already checked. if |A|=0 then,
 		//      cannot use this function.
-		float determinant = dcab.m0 * dcab.m3 - dcab.m1 * dcab.m2;
+		float determinant = dcab[0] * dcab[3] - dcab[1] * dcab[2];
 		if (fabs(determinant) <= EPSILON)
 		{
 			return Identity();
@@ -757,11 +578,11 @@ namespace Liar
 		Matrix2 a1 = a - (ab * c1); // A^-1 - (A^-1 * B) * C'
 
 									// assemble inverse matrix
-		m0 = a1.m0;  m4 = a1.m2; /*|*/ m8 = b1.m0;  m12 = b1.m2;
-		m1 = a1.m1;  m5 = a1.m3; /*|*/ m9 = b1.m1;  m13 = b1.m3;
+		m.s[0] = a1[0];  m.s[4] = a1[2]; /*|*/ m.s[8] = b1[0];  m.s[12] = b1[2];
+		m.s[1] = a1[1];  m.s[5] = a1[3]; /*|*/ m.s[9] = b1[1];  m.s[13] = b1[3];
 		/*-----------------------------+-----------------------------*/
-		m2 = c1.m0;  m6 = c1.m2; /*|*/ m10 = d1.m0;  m14 = d1.m2;
-		m3 = c1.m1;  m7 = c1.m3; /*|*/ m11 = d1.m1;  m15 = d1.m3;
+		m.s[2] = c1[0];  m.s[6] = c1[2]; /*|*/ m.s[10] = d1[0];  m.s[14] = d1[2];
+		m.s[3] = c1[1];  m.s[7] = c1[3]; /*|*/ m.s[11] = d1[1];  m.s[15] = d1[3];
 
 		return *this;
 	}
@@ -776,56 +597,56 @@ namespace Liar
 	Matrix4& Matrix4::InvertGeneral()
 	{
 		// get cofactors of minor matrices
-		float cofactor0 = GetCofactor(m5, m6, m7, m9, m10, m11, m13, m14, m5);
-		float cofactor1 = GetCofactor(m4, m6, m7, m8, m10, m11, m12, m14, m15);
-		float cofactor2 = GetCofactor(m4, m5, m7, m8, m9, m11, m12, m13, m15);
-		float cofactor3 = GetCofactor(m4, m5, m6, m8, m9, m10, m12, m13, m14);
+		float cofactor0 = GetCofactor(m.s[5], m.s[6], m.s[7], m.s[9], m.s[10], m.s[11], m.s[13], m.s[14], m.s[15]);
+		float cofactor1 = GetCofactor(m.s[4], m.s[6], m.s[7], m.s[8], m.s[10], m.s[11], m.s[12], m.s[14], m.s[15]);
+		float cofactor2 = GetCofactor(m.s[4], m.s[5], m.s[7], m.s[8], m.s[9], m.s[11], m.s[12], m.s[13], m.s[15]);
+		float cofactor3 = GetCofactor(m.s[4], m.s[5], m.s[6], m.s[8], m.s[9], m.s[10], m.s[12], m.s[13], m.s[14]);
 
 		// get determinant
-		float determinant = m0 * cofactor0 - m1 * cofactor1 + m2 * cofactor2 - m3 * cofactor3;
+		float determinant = m.s[0] * cofactor0 - m.s[1] * cofactor1 + m.s[2] * cofactor2 - m.s[3] * cofactor3;
 		if (fabs(determinant) <= EPSILON)
 		{
 			return Identity();
 		}
 
 		// get rest of cofactors for adj(M)
-		float cofactor4 = GetCofactor(m1, m2, m3, m9, m10, m11, m13, m14, m15);
-		float cofactor5 = GetCofactor(m0, m2, m3, m8, m10, m11, m12, m14, m15);
-		float cofactor6 = GetCofactor(m0, m1, m3, m8, m9, m11, m12, m13, m15);
-		float cofactor7 = GetCofactor(m0, m1, m2, m8, m9, m10, m12, m13, m14);
+		float cofactor4 = GetCofactor(m.s[1], m.s[2], m.s[3], m.s[9], m.s[10], m.s[11], m.s[13], m.s[14], m.s[15]);
+		float cofactor5 = GetCofactor(m.s[0], m.s[2], m.s[3], m.s[8], m.s[10], m.s[11], m.s[12], m.s[14], m.s[15]);
+		float cofactor6 = GetCofactor(m.s[0], m.s[1], m.s[3], m.s[8], m.s[9], m.s[11], m.s[12], m.s[13], m.s[15]);
+		float cofactor7 = GetCofactor(m.s[0], m.s[1], m.s[2], m.s[8], m.s[9], m.s[10], m.s[12], m.s[13], m.s[14]);
 
-		float cofactor8 = GetCofactor(m1, m2, m3, m5, m6, m7, m13, m14, m15);
-		float cofactor9 = GetCofactor(m0, m2, m3, m4, m6, m7, m12, m14, m15);
-		float cofactor10 = GetCofactor(m0, m1, m3, m4, m5, m7, m12, m13, m15);
-		float cofactor11 = GetCofactor(m0, m1, m2, m4, m5, m6, m12, m13, m14);
+		float cofactor8 = GetCofactor(m.s[1], m.s[2], m.s[3], m.s[5], m.s[6], m.s[7], m.s[13], m.s[14], m.s[15]);
+		float cofactor9 = GetCofactor(m.s[0], m.s[2], m.s[3], m.s[4], m.s[6], m.s[7], m.s[12], m.s[14], m.s[15]);
+		float cofactor10 = GetCofactor(m.s[0], m.s[1], m.s[3], m.s[4], m.s[5], m.s[7], m.s[12], m.s[13], m.s[15]);
+		float cofactor11 = GetCofactor(m.s[0], m.s[1], m.s[2], m.s[4], m.s[5], m.s[6], m.s[12], m.s[13], m.s[14]);
 
-		float cofactor12 = GetCofactor(m1, m2, m3, m5, m6, m7, m9, m10, m11);
-		float cofactor13 = GetCofactor(m0, m2, m3, m4, m6, m7, m8, m10, m11);
-		float cofactor14 = GetCofactor(m0, m1, m3, m4, m5, m7, m8, m9, m11);
-		float cofactor15 = GetCofactor(m0, m1, m2, m4, m5, m6, m8, m9, m10);
+		float cofactor12 = GetCofactor(m.s[1], m.s[2], m.s[3], m.s[5], m.s[6], m.s[7], m.s[9], m.s[10], m.s[11]);
+		float cofactor13 = GetCofactor(m.s[0], m.s[2], m.s[3], m.s[4], m.s[6], m.s[7], m.s[8], m.s[10], m.s[11]);
+		float cofactor14 = GetCofactor(m.s[0], m.s[1], m.s[3], m.s[4], m.s[5], m.s[7], m.s[8], m.s[9], m.s[11]);
+		float cofactor15 = GetCofactor(m.s[0], m.s[1], m.s[2], m.s[4], m.s[5], m.s[6], m.s[8], m.s[9], m.s[10]);
 
 		// build inverse matrix = adj(M) / det(M)
 		// adjugate of M is the transpose of the cofactor matrix of M
 		float invDeterminant = 1.0f / determinant;
-		m0 = invDeterminant * cofactor0;
-		m1 = -invDeterminant * cofactor4;
-		m2 = invDeterminant * cofactor8;
-		m3 = -invDeterminant * cofactor12;
+		m.s[0] = invDeterminant * cofactor0;
+		m.s[1] = -invDeterminant * cofactor4;
+		m.s[2] = invDeterminant * cofactor8;
+		m.s[3] = -invDeterminant * cofactor12;
 
-		m4 = -invDeterminant * cofactor1;
-		m5 = invDeterminant * cofactor5;
-		m6 = -invDeterminant * cofactor9;
-		m7 = invDeterminant * cofactor13;
+		m.s[4] = -invDeterminant * cofactor1;
+		m.s[5] = invDeterminant * cofactor5;
+		m.s[6] = -invDeterminant * cofactor9;
+		m.s[7] = invDeterminant * cofactor13;
 
-		m8 = invDeterminant * cofactor2;
-		m9 = -invDeterminant * cofactor6;
-		m10 = invDeterminant * cofactor10;
-		m11 = -invDeterminant * cofactor14;
+		m.s[8] = invDeterminant * cofactor2;
+		m.s[9] = -invDeterminant * cofactor6;
+		m.s[10] = invDeterminant * cofactor10;
+		m.s[11] = -invDeterminant * cofactor14;
 
-		m12 = -invDeterminant * cofactor3;
-		m13 = invDeterminant * cofactor7;
-		m14 = -invDeterminant * cofactor11;
-		m15 = invDeterminant * cofactor15;
+		m.s[12] = -invDeterminant * cofactor3;
+		m.s[13] = invDeterminant * cofactor7;
+		m.s[14] = -invDeterminant * cofactor11;
+		m.s[15] = invDeterminant * cofactor15;
 
 		return *this;
 	}
@@ -837,10 +658,10 @@ namespace Liar
 	///////////////////////////////////////////////////////////////////////////////
 	float Matrix4::GetDeterminant() const
 	{
-		return  m0 * GetCofactor(m5, m6, m7, m9, m10, m11, m13, m14, m15) -
-				m1 * GetCofactor(m4, m6, m7, m8, m10, m11, m12, m14, m15) +
-				m2 * GetCofactor(m4, m5, m7, m8, m9, m11, m12, m13, m15) -
-				m3 * GetCofactor(m4, m5, m6, m8, m9, m10, m12, m13, m14);
+		return  m.s[0] * GetCofactor(m.s[5], m.s[6], m.s[7], m.s[9], m.s[10], m.s[11], m.s[13], m.s[14], m.s[15]) -
+				m.s[1] * GetCofactor(m.s[4], m.s[6], m.s[7], m.s[8], m.s[10], m.s[11], m.s[12], m.s[14], m.s[15]) +
+				m.s[2] * GetCofactor(m.s[4], m.s[5], m.s[7], m.s[8], m.s[9], m.s[11], m.s[12], m.s[13], m.s[15]) -
+				m.s[3] * GetCofactor(m.s[4], m.s[5], m.s[6], m.s[8], m.s[9], m.s[10], m.s[12], m.s[13], m.s[14]);
 	}
 
 
@@ -871,9 +692,9 @@ namespace Liar
 
 	Matrix4& Matrix4::Translate(float x, float y, float z)
 	{
-		m0 += m3 * x;   m4 += m7 * x;   m8 += m11 * x;   m12 += m15 * x;
-		m1 += m3 * y;   m5 += m7 * y;   m9 += m11 * y;   m13 += m15 * y;
-		m2 += m3 * z;   m6 += m7 * z;   m10 += m11 * z;   m14 += m15 * z;
+		m.s[0] += m.s[3] * x;   m.s[4] += m.s[7] * x;   m.s[8] += m.s[11] * x;   m.s[12] += m.s[15] * x;
+		m.s[1] += m.s[3] * y;   m.s[5] += m.s[7] * y;   m.s[9] += m.s[11] * y;   m.s[13] += m.s[15] * y;
+		m.s[2] += m.s[3] * z;   m.s[6] += m.s[7] * z;   m.s[10] += m.s[11] * z;   m.s[14] += m.s[15] * z;
 
 		return *this;
 	}
@@ -890,9 +711,9 @@ namespace Liar
 
 	Matrix4& Matrix4::Scale(float x, float y, float z)
 	{
-		m0 *= x;   m4 *= x;   m8 *= x;   m12 *= x;
-		m1 *= y;   m5 *= y;   m9 *= y;   m13 *= y;
-		m2 *= z;   m6 *= z;   m10 *= z;   m14 *= z;
+		m.s[0] *= x;   m.s[4] *= x;   m.s[8] *= x;   m.s[12] *= x;
+		m.s[1] *= y;   m.s[5] *= y;   m.s[9] *= y;   m.s[13] *= y;
+		m.s[2] *= z;   m.s[6] *= z;   m.s[10] *= z;   m.s[14] *= z;
 		return *this;
 	}
 
@@ -912,9 +733,9 @@ namespace Liar
 		float c = cosf(angle * DEG2RAD);    // cosine
 		float s = sinf(angle * DEG2RAD);    // sine
 		float c1 = 1.0f - c;                // 1 - c
-		float   tm0 = m0, tm4 = m4, tm8 = m8, tm12 = m12,
-				tm1 = m1, tm5 = m5, tm9 = m9, tm13 = m13,
-				tm2 = m2, tm6 = m6, tm10 = m10, tm14 = m14;
+		float   tm0 = m.s[0], tm4 = m.s[4], tm8 = m.s[8], tm12 = m.s[12],
+				tm1 = m.s[1], tm5 = m.s[5], tm9 = m.s[9], tm13 = m.s[13],
+				tm2 = m.s[2], tm6 = m.s[6], tm10 = m.s[10], tm14 = m.s[14];
 
 		// build rotation matrix
 		float r0 = x * x * c1 + c;
@@ -928,18 +749,18 @@ namespace Liar
 		float r10 = z * z * c1 + c;
 
 		// multiply rotation matrix
-		m0 = r0 * tm0 + r4 * tm1 + r8 * tm2;
-		m1 = r1 * tm0 + r5 * tm1 + r9 * tm2;
-		m2 = r2 * tm0 + r6 * tm1 + r10* tm2;
-		m4 = r0 * tm4 + r4 * tm5 + r8 * tm6;
-		m5 = r1 * tm4 + r5 * tm5 + r9 * tm6;
-		m6 = r2 * tm4 + r6 * tm5 + r10* tm6;
-		m8 = r0 * tm8 + r4 * tm9 + r8 * tm10;
-		m9 = r1 * tm8 + r5 * tm9 + r9 * tm10;
-		m10 = r2 * tm8 + r6 * tm9 + r10* tm10;
-		m12 = r0 * tm12 + r4 * tm13 + r8 * tm14;
-		m13 = r1 * tm12 + r5 * tm13 + r9 * tm14;
-		m14 = r2 * tm12 + r6 * tm13 + r10* tm14;
+		m.s[0] = r0 * tm0 + r4 * tm1 + r8 * tm2;
+		m.s[1] = r1 * tm0 + r5 * tm1 + r9 * tm2;
+		m.s[2] = r2 * tm0 + r6 * tm1 + r10* tm2;
+		m.s[4] = r0 * tm4 + r4 * tm5 + r8 * tm6;
+		m.s[5] = r1 * tm4 + r5 * tm5 + r9 * tm6;
+		m.s[6] = r2 * tm4 + r6 * tm5 + r10* tm6;
+		m.s[8] = r0 * tm8 + r4 * tm9 + r8 * tm10;
+		m.s[9] = r1 * tm8 + r5 * tm9 + r9 * tm10;
+		m.s[10] = r2 * tm8 + r6 * tm9 + r10* tm10;
+		m.s[12] = r0 * tm12 + r4 * tm13 + r8 * tm14;
+		m.s[13] = r1 * tm12 + r5 * tm13 + r9 * tm14;
+		m.s[14] = r2 * tm12 + r6 * tm13 + r10* tm14;
 
 		return *this;
 	}
@@ -957,19 +778,19 @@ namespace Liar
 	{
 		float c = cosf(angle * DEG2RAD);
 		float s = sinf(angle * DEG2RAD);
-		float	tm1 = m1, tm2 = m2,
-				tm5 = m5, tm6 = m6,
-				tm9 = m9, tm10 = m10,
-				tm13 = m13, tm14 = m14;
+		float	tm1 = m.s[1], tm2 = m.s[2],
+				tm5 = m.s[5], tm6 = m.s[6],
+				tm9 = m.s[9], tm10 = m.s[10],
+				tm13 = m.s[13], tm14 = m.s[14];
 
-		m1 = tm1 * c + tm2 *-s;
-		m2 = tm1 * s + tm2 * c;
-		m5 = tm5 * c + tm6 *-s;
-		m6 = tm5 * s + tm6 * c;
-		m9 = tm9 * c + tm10*-s;
-		m10 = tm9 * s + tm10* c;
-		m13 = tm13* c + tm14*-s;
-		m14 = tm13* s + tm14* c;
+		m.s[1] = tm1 * c + tm2 *-s;
+		m.s[2] = tm1 * s + tm2 * c;
+		m.s[5] = tm5 * c + tm6 *-s;
+		m.s[6] = tm5 * s + tm6 * c;
+		m.s[9] = tm9 * c + tm10*-s;
+		m.s[10] = tm9 * s + tm10* c;
+		m.s[13] = tm13* c + tm14*-s;
+		m.s[14] = tm13* s + tm14* c;
 
 		return *this;
 	}
@@ -978,19 +799,19 @@ namespace Liar
 	{
 		float c = cosf(angle * DEG2RAD);
 		float s = sinf(angle * DEG2RAD);
-		float	tm0 = m0, tm2 = m2,
-				tm4 = m4, tm6 = m6,
-				tm8 = m8, tm10 = m10,
-				tm12 = m12, tm14 = m14;
+		float	tm0 = m.s[0], tm2 = m.s[2],
+				tm4 = m.s[4], tm6 = m.s[6],
+				tm8 = m.s[8], tm10 = m.s[10],
+				tm12 = m.s[12], tm14 = m.s[14];
 
-		m0 = tm0 * c + tm2 * s;
-		m2 = tm0 *-s + tm2 * c;
-		m4 = tm4 * c + tm6 * s;
-		m6 = tm4 *-s + tm6 * c;
-		m8 = tm8 * c + tm10* s;
-		m10 = tm8 *-s + tm10* c;
-		m12 = tm12* c + tm14* s;
-		m14 = tm12*-s + tm14* c;
+		m.s[0] = tm0 * c + tm2 * s;
+		m.s[2] = tm0 *-s + tm2 * c;
+		m.s[4] = tm4 * c + tm6 * s;
+		m.s[6] = tm4 *-s + tm6 * c;
+		m.s[8] = tm8 * c + tm10* s;
+		m.s[10] = tm8 *-s + tm10* c;
+		m.s[12] = tm12* c + tm14* s;
+		m.s[14] = tm12*-s + tm14* c;
 
 		return *this;
 	}
@@ -999,19 +820,19 @@ namespace Liar
 	{
 		float c = cosf(angle * DEG2RAD);
 		float s = sinf(angle * DEG2RAD);
-		float	tm0 = m0, tm1 = m1,
-				tm4 = m4, tm5 = m5,
-				tm8 = m8, tm9 = m9,
-				tm12 = m12, tm13 = m13;
+		float	tm0 = m.s[0], tm1 = m.s[1],
+				tm4 = m.s[4], tm5 = m.s[5],
+				tm8 = m.s[8], tm9 = m.s[9],
+				tm12 = m.s[12], tm13 = m.s[13];
 
-		m0 = tm0 * c + tm1 *-s;
-		m1 = tm0 * s + tm1 * c;
-		m4 = tm4 * c + tm5 *-s;
-		m5 = tm4 * s + tm5 * c;
-		m8 = tm8 * c + tm9 *-s;
-		m9 = tm8 * s + tm9 * c;
-		m12 = tm12* c + tm13*-s;
-		m13 = tm12* s + tm13* c;
+		m.s[0] = tm0 * c + tm1 *-s;
+		m.s[1] = tm0 * s + tm1 * c;
+		m.s[4] = tm4 * c + tm5 *-s;
+		m.s[5] = tm4 * s + tm5 * c;
+		m.s[8] = tm8 * c + tm9 *-s;
+		m.s[9] = tm8 * s + tm9 * c;
+		m.s[12] = tm12* c + tm13*-s;
+		m.s[13] = tm12* s + tm13* c;
 
 		return *this;
 	}
@@ -1075,9 +896,8 @@ namespace Liar
 		//this->SetCol(2, forward);
 
 		// compute forward vector and normalize
-		Liar::Vector3D* forward = new Liar::Vector3D(m12, m13, m14);
-		forward->Negative();
-		forward->Add(tx, ty, tz);
+		Liar::Vector3D* forward = new Liar::Vector3D(m.s[12], m.s[13], m.s[14]);
+		forward->Sub(tx, ty, tz);
 		forward->Normalize();
 
 		Liar::Vector3D* tmp = new Liar::Vector3D();
@@ -1142,7 +962,7 @@ namespace Liar
 
 		// compute forward vector and normalize
 		Liar::Vector3D* forward = new Liar::Vector3D(tx, ty, tz);
-		forward->Sub(m12, m13, m14);
+		forward->Sub(m.s[12], m.s[13], m.s[14]);
 		forward->Normalize();
 
 		// compute left vector
@@ -1173,15 +993,15 @@ namespace Liar
 	///////////////////////////////////////////////////////////////////////////////
 	Matrix3 Matrix4::GetRotationMatrix() const
 	{
-		Matrix3 mat(m0, m1, m2,
-			m4, m5, m6,
-			m8, m9, m10);
+		Matrix3 mat(m.s[0], m.s[1], m.s[2],
+			m.s[4], m.s[5], m.s[6],
+			m.s[8], m.s[9], m.s[10]);
 		return mat;
 	}
 
 	void Matrix4::GetRotationMatrix(Liar::Matrix3& v) const
 	{
-		v.Set(m0, m1, m2, m4, m5, m6, m8, m9, m10);
+		v.Set(m.s[0], m.s[1], m.s[2], m.s[4], m.s[5], m.s[6], m.s[8], m.s[9], m.s[10]);
 	}
 
 
@@ -1237,8 +1057,8 @@ namespace Liar
 		// NOTE: asin() returns -90~+90, so correct the angle range -180~+180
 		// using z value of forward vector
 
-		yaw = RAD2DEG * asinf(m8);
-		if (m10 < 0)
+		yaw = RAD2DEG * asinf(m.s[8]);
+		if (m.s[10] < 0)
 		{
 			if (yaw >= 0) yaw = 180.0f - yaw;
 			else         yaw = -180.0f - yaw;
@@ -1246,15 +1066,15 @@ namespace Liar
 
 		// find roll (around z-axis) and pitch (around x-axis)
 		// if forward vector is (1,0,0) or (-1,0,0), then m[0]=m[4]=m[9]=m[10]=0
-		if (m0 > -EPSILON && m0 < EPSILON)
+		if (m.s[0] > -EPSILON && m.s[0] < EPSILON)
 		{
 			roll = 0;  //@@ assume roll=0
-			pitch = RAD2DEG * atan2f(m1, m5);
+			pitch = RAD2DEG * atan2f(m.s[1], m.s[5]);
 		}
 		else
 		{
-			roll = RAD2DEG * atan2f(-m4, m0);
-			pitch = RAD2DEG * atan2f(-m9, m0);
+			roll = RAD2DEG * atan2f(-m.s[4], m.s[0]);
+			pitch = RAD2DEG * atan2f(-m.s[9], m.s[0]);
 		}
 	}
 

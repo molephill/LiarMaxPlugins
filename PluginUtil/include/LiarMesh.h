@@ -7,6 +7,12 @@
 #include <LiarMaterial.h>
 #include "LiarVertexBuffer.h"
 
+#ifndef PLUGINS
+#include <Shader.hpp>
+#include <Camera3D.h>
+#endif // !PLUGINS
+
+
 namespace Liar
 {
 
@@ -35,11 +41,11 @@ namespace Liar
 
 		void EraseIndexBuff(int);
         
+#ifndef PLUGINS
     public:
         void Upload();
         void Render();
         
-#ifndef PLUGINS
     private:
         unsigned int VAO;
         unsigned int VBO;
@@ -62,16 +68,16 @@ namespace Liar
 		Liar::LiarMaterial* GetMat() { return m_material; };
 
 		std::string meshName;
-        
-    public:
-        void Upload();
-        void Render();
 
 #ifdef PLUGINS
 		int vertexNum;
 		int faceNum;
 
 		std::string& GetMaterialName() { return m_material->name; };
+#else
+	public:
+		void Upload();
+		void Render(Liar::Shader&);
 #endif // !PLUGINS
 
 	};

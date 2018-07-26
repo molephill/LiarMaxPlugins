@@ -7,6 +7,11 @@
 #include <LiarVertexBuffer.h>
 #include <LiarStringUtil.h>
 
+#ifndef PLUGINS
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+#endif // !PLUGINS
+
 namespace Liar
 {
 	// ====================  Œ∆¿Ì ================
