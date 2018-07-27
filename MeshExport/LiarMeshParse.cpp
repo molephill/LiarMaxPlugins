@@ -233,6 +233,8 @@ namespace Liar
 		Liar::StringUtil::WChar_tToString(nodemtl->GetName(), mat->name);
 		int tTextureNum = nodemtl->NumSubTexmaps();
 		int curIndex = 0;
+		/*MSTR textureType;
+		nodemtl->GetClassName(textureType);*/
 		for (int i = 0; i < tTextureNum; ++i)
 		{
 			Texmap* tmap = nodemtl->GetSubTexmap(i);

@@ -41,32 +41,49 @@ namespace Liar
 		glGenBuffers(1, &EBO);
 
 		glBindVertexArray(VAO);
-		// load data into vertex buffers
+
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
-		// A great thing about structs is that their memory layout is sequential for all its items.
-		// The effect is that we can simply pass a pointer to the struct and it translates perfectly to a glm::vec3/2 array which
-		// again translates to 3/2 floats which translates to a byte array.
-		glBufferData(GL_ARRAY_BUFFER, m_bufferSize * sizeof(Liar::LiarVertexBuffer), m_allVertexBuffers->data(), GL_STATIC_DRAW);
 
+		size_t positionSize = Liar::LiarVertexBuffer::GetPositionSize();
+		size_t normalSize = Liar::LiarVertexBuffer::GetNormalSize();
+		size_t colorSize = Liar::LiarVertexBuffer::GetColorSize();
+		size_t uvSize = Liar::LiarVertexBuffer::GetUVSize();
+
+		size_t oneSize = Liar::LiarVertexBuffer::GetBuffSize();
+		size_t totalSize = m_bufferSize * oneSize;
+
+		size_t positionOffSize = Liar::LiarVertexBuffer::GetPositionOffSize();
+		size_t normalOffSize = Liar::LiarVertexBuffer::GetNormalOffSize();
+		size_t colorOffSize = Liar::LiarVertexBuffer::GetColorOffSize();
+		size_t uvOffSize = Liar::LiarVertexBuffer::GetUVOffSize();
+
+		glBufferData(GL_ARRAY_BUFFER, totalSize, nullptr, GL_STATIC_DRAW);
+		for (size_t i = 0; i < m_bufferSize; ++i)
+		{
+			size_t start = i * oneSize;
+			Liar::LiarVertexBuffer* buffData = m_allVertexBuffers->at(i);
+			glBufferSubData(GL_ARRAY_BUFFER, start + positionOffSize, positionSize, buffData->position);
+			glBufferSubData(GL_ARRAY_BUFFER, start + normalOffSize, normalSize, buffData->normal);
+			glBufferSubData(GL_ARRAY_BUFFER, start + colorOffSize, colorSize, buffData->color);
+			glBufferSubData(GL_ARRAY_BUFFER, start + uvOffSize, uvSize, buffData->uv);
+		}
+
+		size_t indiceSize1 = GetIndicesSize() * sizeof(unsigned int);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_indices->size() * sizeof(unsigned int), m_indices->data(), GL_STATIC_DRAW);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indiceSize1, m_indices->data(), GL_STATIC_DRAW);
 
-		size_t len = sizeof(Liar::LiarVertexBuffer);
-		// set the vertex attribute pointers
-		// vertex Positions
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, len, (void*)0);
+		// position attribute
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, oneSize, (void*)positionOffSize);
 		glEnableVertexAttribArray(0);
-		// vertex normals
-		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, len, (void*)offsetof(LiarVertexBuffer, normal));
+		// color attribute
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, oneSize, (void*)normalOffSize);
 		glEnableVertexAttribArray(1);
-		// vertex color
-		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, len, (void*)offsetof(LiarVertexBuffer, color));
+		// color attribute
+		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, oneSize, (void*)colorOffSize);
 		glEnableVertexAttribArray(2);
-		// vertex texture coords
-		glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, len, (void*)offsetof(LiarVertexBuffer, uv));
+		// texture coord attribute
+		glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, oneSize, (void*)uvOffSize);
 		glEnableVertexAttribArray(3);
-
-		glBindVertexArray(0);
 
 	}
 
@@ -74,8 +91,7 @@ namespace Liar
 	{
 		// draw mesh
 		glBindVertexArray(VAO);
-		glDrawElements(GL_TRIANGLES, m_indices->size(), GL_UNSIGNED_INT, 0);
-		glBindVertexArray(0);
+		glDrawElements(GL_TRIANGLES, GetIndicesSize(), GL_UNSIGNED_INT, 0);
 	}
 
 #endif // !PLUGINS
