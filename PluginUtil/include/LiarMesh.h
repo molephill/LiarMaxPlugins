@@ -8,8 +8,8 @@
 #include "LiarVertexBuffer.h"
 
 #ifndef PLUGINS
-#include <Shader.hpp>
-#include <Camera3D.h>
+#include "Shader.hpp"
+#include "Camera3D.h"
 #endif // !PLUGINS
 
 
