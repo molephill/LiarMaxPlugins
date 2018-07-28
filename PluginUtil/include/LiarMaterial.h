@@ -52,7 +52,7 @@ namespace Liar
 		void Upload(const char*);
 		void Upload(const std::string&);
 
-		void Render(Liar::Shader&);
+		void Render(Liar::Shader&, int);
 #endif // ! PLUGINS
 
 	};

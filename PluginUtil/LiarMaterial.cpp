@@ -30,8 +30,6 @@ namespace Liar
 		unsigned char *data = stbi_load(fileName, &width, &height, &nrComponents, 0);
 		if (data)
 		{
-			glGenTextures(1, &m_textureId);
-
 			GLenum format;
 			if (nrComponents == 1)
 				format = GL_RED;
@@ -40,6 +38,7 @@ namespace Liar
 			else if (nrComponents == 4)
 				format = GL_RGBA;
 
+			glGenTextures(1, &m_textureId);
 			glBindTexture(GL_TEXTURE_2D, m_textureId);
 			glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
 			glGenerateMipmap(GL_TEXTURE_2D);
@@ -53,7 +52,6 @@ namespace Liar
 		else
 		{
 			std::cout << "Texture failed to load at path: " << fileName << std::endl;
-			stbi_image_free(data);
 		}
 	}
 
@@ -62,8 +60,9 @@ namespace Liar
 		Upload(fileName.data());
 	}
 
-	void LiarTexture::Render(Liar::Shader& shader)
+	void LiarTexture::Render(Liar::Shader& shader, int i)
 	{
+		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, m_textureId);
 	}
 
@@ -102,9 +101,7 @@ namespace Liar
 		for (int i = 0; i < m_textureSize; ++i)
 		{
 			Liar::LiarTexture* texture = m_allTextures->at(i);
-			glActiveTexture(GL_TEXTURE0 + i); // active proper texture unit before binding
-			texture->Render(shader);
-			shader.SetInt("texture", i);
+			texture->Render(shader, i);
 		}
 	}
 #endif // !PLUGINS

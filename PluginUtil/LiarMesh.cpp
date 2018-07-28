@@ -75,14 +75,14 @@ namespace Liar
 		// position attribute
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, oneSize, (void*)positionOffSize);
 		glEnableVertexAttribArray(0);
-		// color attribute
+		// normal attribute
 		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, oneSize, (void*)normalOffSize);
 		glEnableVertexAttribArray(1);
 		// color attribute
 		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, oneSize, (void*)colorOffSize);
 		glEnableVertexAttribArray(2);
 		// texture coord attribute
-		glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, oneSize, (void*)uvOffSize);
+		glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, oneSize, (void*)uvOffSize);
 		glEnableVertexAttribArray(3);
 
 	}
