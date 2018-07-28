@@ -1,4 +1,4 @@
-#include "LiarMeshParse.h"
+ï»¿#include "LiarMeshParse.h"
 #include "LiarMeshWrite.h"
 
 #include <triobj.h>
@@ -26,7 +26,7 @@ namespace Liar
 
 	void LiarMeshParse::SetControl(const TCHAR* name, ExpInterface* ei, Interface* ip, BOOL suppressPrompts, DWORD options)
 	{
-		// ±£´æ±äÁ¿
+		// ä¿å­˜å˜é‡
 		Liar::StringUtil::GetTChar2Char(name, m_szExportPath);
 
 		m_pExpInterface = ei;
@@ -35,7 +35,7 @@ namespace Liar
 
 	}
 
-	// ==================== ½âÎö½Úµã =======================
+	// ==================== è§£æèŠ‚ç‚¹ =======================
 	int LiarMeshParse::ParseNode(bool zy)
 	{
 		int numChildren = m_pInterface->GetRootNode()->NumberOfChildren();
@@ -46,7 +46,7 @@ namespace Liar
 
 			for (int idx = 0; idx < numChildren; idx++)
 			{
-				//ÁĞ¾Ù¶ÔÓ¦½ÚµãĞÅÏ¢
+				//åˆ—ä¸¾å¯¹åº”èŠ‚ç‚¹ä¿¡æ¯
 				INode* node = m_pInterface->GetRootNode()->GetChildNode(idx);
 				if (!node) continue;
 
@@ -89,7 +89,7 @@ namespace Liar
 		}
 	}
 
-	// ==================== ÊÍ·Å¶àÓàµÄÊı×é =================
+	// ==================== é‡Šæ”¾å¤šä½™çš„æ•°ç»„ =================
 	void LiarMeshParse::EraseMeshIndex(int index)
 	{
 		for (std::vector<Liar::LiarMesh*>::iterator it = m_allMeshs->begin() + index; it != m_allMeshs->end();)
@@ -101,7 +101,7 @@ namespace Liar
 	}
 
 
-	// ========================= ½âÎöÒªÓÃµ½µÄ½á¹¹ ==========================
+	// ========================= è§£æè¦ç”¨åˆ°çš„ç»“æ„ ==========================
 	void LiarMeshParse::ParseLiarMesh(Liar::LiarMesh* lmesh, INode* node, Mesh* mesh, bool zy)
 	{
 		lmesh->faceNum = mesh->getNumFaces();
@@ -145,42 +145,43 @@ namespace Liar
 		int tFaceNum = mesh->getNumFaces();
 		for (int i = 0; i < tFaceNum; ++i)
 		{
-			//½«Èı½ÇÃæË÷ÒıĞÅÏ¢±£´æµ½ÈİÆ÷ÖĞ¡£
-			geo->GetIndices()->push_back(mesh->faces[i].v[0]);
-			geo->GetIndices()->push_back(mesh->faces[i].v[1]);
-			geo->GetIndices()->push_back(mesh->faces[i].v[2]);
+			//å°†ä¸‰è§’é¢ç´¢å¼•ä¿¡æ¯ä¿å­˜åˆ°å®¹å™¨ä¸­ã€‚
+			Face& face = mesh->faces[i];
+			geo->GetIndices()->push_back(face.v[0]);
+			geo->GetIndices()->push_back(face.v[1]);
+			geo->GetIndices()->push_back(face.v[2]);
 		}
 	}
 
 	void LiarMeshParse::ParseLiarVertexBuffer(Liar::LiarVertexBuffer* buff, Mesh* mesh, int index, bool zy)
 	{
-		//Î»ÖÃ£¬Òª×¢ÒâµÄÊÇÔÚ3ds maxÖĞzÖµÊÇ³¯ÉÏµÄ£¬yÖµÊÇ³¯Ç°µÄ£¬¶øÔÚÎÒÃÇµÄÓÎÏ·ÖĞ,yÖµ³¯ÉÏ£¬zÖµ³¯Ç°¡£ËùÒÔÒª×öÏÂ´¦Àí¡£
+		//ä½ç½®ï¼Œè¦æ³¨æ„çš„æ˜¯åœ¨3ds maxä¸­zå€¼æ˜¯æœä¸Šçš„ï¼Œyå€¼æ˜¯æœå‰çš„ï¼Œè€Œåœ¨æˆ‘ä»¬çš„æ¸¸æˆä¸­,yå€¼æœä¸Šï¼Œzå€¼æœå‰ã€‚æ‰€ä»¥è¦åšä¸‹å¤„ç†ã€‚
 		Liar::LiarStructUtil::ParsePoint3(buff->position, mesh->verts[index], zy);
 		Liar::LiarStructUtil::ParsePoint3(buff->normal, mesh->getNormal(index), zy);
 	}
 
 	void LiarMeshParse::ParseLiarGeometryColor(Liar::LiarGeometry* geo, Mesh* mesh, bool zy)
 	{
-		//»ñÈ¡¶¥µãÉ«ĞÅÏ¢
-		//Èç¹ûÓĞ¶¥µãÓĞÉ«²Ê¸³Öµ¡£
+		//è·å–é¡¶ç‚¹è‰²ä¿¡æ¯
+		//å¦‚æœæœ‰é¡¶ç‚¹æœ‰è‰²å½©èµ‹å€¼ã€‚
 		if (mesh->numCVerts > 0)
 		{
-			int tFaceNum = mesh->getNumFaces();
-			//±éÀúÃ¿¸öÈı½ÇÃæ
+			int tFaceNum = mesh->getNumFaces() / 3;
+			//éå†æ¯ä¸ªä¸‰è§’é¢
 			for (int i = 0; i < tFaceNum; i++)
 			{
-				//É«²ÊĞÅÏ¢Ò²ÒÔÀàËÆ¶¥µãµÄ·½Ê½´æ·ÅÔÚÄ£ĞÍµÄÉ«²ÊĞÅÏ¢Êı×évertColÖĞ£¬¶øÃèÊöÃ¿¸öÈı½ÇÃæµÄÈı¸ö¶¥µã¶¼¶ÔÓ¦É«²ÊĞÅÏ¢Êı×éµÄÄÄ¸öÖµ£¬Ò²ÓĞÀàËÆÃæË÷ÒıµÄĞÅÏ¢½á¹¹TVFace´æ·ÅÔÚÄ£ĞÍµÄvcFaceÊı×éÖĞ¡£
+				//è‰²å½©ä¿¡æ¯ä¹Ÿä»¥ç±»ä¼¼é¡¶ç‚¹çš„æ–¹å¼å­˜æ”¾åœ¨æ¨¡å‹çš„è‰²å½©ä¿¡æ¯æ•°ç»„vertColä¸­ï¼Œè€Œæè¿°æ¯ä¸ªä¸‰è§’é¢çš„ä¸‰ä¸ªé¡¶ç‚¹éƒ½å¯¹åº”è‰²å½©ä¿¡æ¯æ•°ç»„çš„å“ªä¸ªå€¼ï¼Œä¹Ÿæœ‰ç±»ä¼¼é¢ç´¢å¼•çš„ä¿¡æ¯ç»“æ„TVFaceå­˜æ”¾åœ¨æ¨¡å‹çš„vcFaceæ•°ç»„ä¸­ã€‚
 				TVFace& tface = mesh->vcFace[i];
-				//È¡µÃÉ«²ÊÊı×éÖĞ¶ÔÓ¦Èı½ÇÃæ¸÷¶¥µãÉ«²ÊÖµµÄÈı¸öË÷Òı¡£
+				//å–å¾—è‰²å½©æ•°ç»„ä¸­å¯¹åº”ä¸‰è§’é¢å„é¡¶ç‚¹è‰²å½©å€¼çš„ä¸‰ä¸ªç´¢å¼•ã€‚
 				int tSrcColorIndex1 = tface.getTVert(0);
 				int tSrcColorIndex2 = tface.getTVert(1);
 				int	 tSrcColorIndex3 = tface.getTVert(2);
-				//È¡µÃÄ£ĞÍÈı½ÇÃæµÄÈı¸öË÷Òı¡£
+				//å–å¾—æ¨¡å‹ä¸‰è§’é¢çš„ä¸‰ä¸ªç´¢å¼•ã€‚
 				int tDestColorIndex1 = mesh->faces[i].v[0];
 				int tDestColorIndex2 = mesh->faces[i].v[1];
 				int	tDestColorIndex3 = mesh->faces[i].v[2];
 
-				//½«É«²ÊÊı×évertColÖĞ¶ÔÓ¦Èı½ÇÃæ¸÷¶¥µãÉ«²ÊµÄÖµ¸³Öµ¸øÏàÓ¦µÄ¶¥µã¡£
+				//å°†è‰²å½©æ•°ç»„vertColä¸­å¯¹åº”ä¸‰è§’é¢å„é¡¶ç‚¹è‰²å½©çš„å€¼èµ‹å€¼ç»™ç›¸åº”çš„é¡¶ç‚¹ã€‚
 				Liar::LiarVertexBuffer* buff1 = geo->GetBuffers()->at(tDestColorIndex1);
 				Liar::LiarStructUtil::ParsePoint3(buff1->color, mesh->vertCol[tSrcColorIndex1], zy);
 
@@ -195,31 +196,31 @@ namespace Liar
 
 	void LiarMeshParse::ParseLiarGeometryUV(Liar::LiarGeometry* geo, Mesh* mesh, bool zy)
 	{
-		int tFaceNum = mesh->getNumFaces();
 
-		//»ñÈ¡¶¥µãÎÆÀí×ø±ê
-		//Èç¹ûÓĞ¶¥µãÓĞÎÆÀí×ø±ê¸³Öµ¡£
+		//è·å–é¡¶ç‚¹çº¹ç†åæ ‡
+		//å¦‚æœæœ‰é¡¶ç‚¹æœ‰çº¹ç†åæ ‡èµ‹å€¼ã€‚
 		if (mesh->numTVerts > 0)
 		{
-			//¶¥µã
+			int tFaceNum = mesh->getNumFaces() / 3;
+			//é¡¶ç‚¹
 			for (int i = 0; i < tFaceNum; i++)
 			{
-				//ÎÆÀí×ø±êĞÅÏ¢Ò²ÒÔÀàËÆ¶¥µãµÄ·½Ê½´æ·ÅÔÚÄ£ĞÍµÄÉ«²ÊĞÅÏ¢Êı×étVertsÖĞ£¬¶øÃèÊöÃ¿¸öÈı½ÇÃæµÄÈı¸ö¶¥µã¶¼¶ÔÓ¦ÎÆÀí×ø±êĞÅÏ¢Êı×éµÄÄÄ¸öÖµ£¬Ò²ÓĞÀàËÆÃæË÷ÒıµÄĞÅÏ¢½á¹¹TVFace´æ·ÅÔÚÄ£ĞÍµÄtvFaceÊı×éÖĞ¡£
+				//çº¹ç†åæ ‡ä¿¡æ¯ä¹Ÿä»¥ç±»ä¼¼é¡¶ç‚¹çš„æ–¹å¼å­˜æ”¾åœ¨æ¨¡å‹çš„è‰²å½©ä¿¡æ¯æ•°ç»„tVertsä¸­ï¼Œè€Œæè¿°æ¯ä¸ªä¸‰è§’é¢çš„ä¸‰ä¸ªé¡¶ç‚¹éƒ½å¯¹åº”çº¹ç†åæ ‡ä¿¡æ¯æ•°ç»„çš„å“ªä¸ªå€¼ï¼Œä¹Ÿæœ‰ç±»ä¼¼é¢ç´¢å¼•çš„ä¿¡æ¯ç»“æ„TVFaceå­˜æ”¾åœ¨æ¨¡å‹çš„tvFaceæ•°ç»„ä¸­ã€‚
 				TVFace& tface = mesh->tvFace[i];
-				//È¡µÃÎÆÀí×ø±êÊı×éÖĞ¶ÔÓ¦Èı½ÇÃæ¸÷¶¥µãÎÆÀí×ø±êÖµµÄÈı¸öË÷Òı¡£
+				//å–å¾—çº¹ç†åæ ‡æ•°ç»„ä¸­å¯¹åº”ä¸‰è§’é¢å„é¡¶ç‚¹çº¹ç†åæ ‡å€¼çš„ä¸‰ä¸ªç´¢å¼•ã€‚
 				int tSrcTexIndex1 = tface.getTVert(0);
 				int tSrcTexIndex2 = tface.getTVert(1);
 				int tSrcTexIndex3 = tface.getTVert(2);
-				//È¡µÃÄ£ĞÍÈı½ÇÃæµÄÈı¸öË÷Òı¡£	
+				//å–å¾—æ¨¡å‹ä¸‰è§’é¢çš„ä¸‰ä¸ªç´¢å¼•ã€‚	
 				int tDestTexIndex1 = mesh->faces[i].v[0];
 				int	tDestTexIndex2 = mesh->faces[i].v[1];
 				int	tDestTexIndex3 = mesh->faces[i].v[2];
 
-				//½«ÎÆÀí×ø±êÊı×étVertsÖĞ¶ÔÓ¦Èı½ÇÃæ¸÷¶¥µãÎÆÀí×ø±êµÄÖµ¸³Öµ¸øÏàÓ¦µÄ¶¥µã¡£
+				//å°†çº¹ç†åæ ‡æ•°ç»„tVertsä¸­å¯¹åº”ä¸‰è§’é¢å„é¡¶ç‚¹çº¹ç†åæ ‡çš„å€¼èµ‹å€¼ç»™ç›¸åº”çš„é¡¶ç‚¹ã€‚
 				Liar::LiarVertexBuffer* buff1 = geo->GetBuffers()->at(tDestTexIndex1);
 				Liar::LiarVertexBuffer* buff2 = geo->GetBuffers()->at(tDestTexIndex2);
 				Liar::LiarVertexBuffer* buff3 = geo->GetBuffers()->at(tDestTexIndex3);
-				//×¢Òâ£ºÔÚÎÆÀíµÄ×İÏòÉÏ£¬3ds maxÓëÎÒÃÇÓÎÏ·ÖĞÊÇ·´µÄ£¬Ò²ĞèÒª×öÏÂ´¦Àí¡£
+				//æ³¨æ„ï¼šåœ¨çº¹ç†çš„çºµå‘ä¸Šï¼Œ3ds maxä¸æˆ‘ä»¬æ¸¸æˆä¸­æ˜¯åçš„ï¼Œä¹Ÿéœ€è¦åšä¸‹å¤„ç†ã€‚
 				Liar::LiarStructUtil::ParsePoint3(buff1->uv, mesh->tVerts[tSrcTexIndex1], zy);
 				Liar::LiarStructUtil::ParsePoint3(buff2->uv, mesh->tVerts[tSrcTexIndex2], zy);
 				Liar::LiarStructUtil::ParsePoint3(buff3->uv, mesh->tVerts[tSrcTexIndex3], zy);
@@ -272,13 +273,13 @@ namespace Liar
 
 			if (!path.empty())
 			{
-				// µÃµ½ÎÄ¼şÃû
+				// å¾—åˆ°æ–‡ä»¶å
 				std::string fullName = Liar::StringUtil::GetLast(path);
-				// µÃµ½À©Õ¹Ãû
+				// å¾—åˆ°æ‰©å±•å
 				std::string strExt, name;
 				Liar::StringUtil::GetHeadAndLast(fullName, name, strExt);
 
-				//// À©Õ¹ÃûĞ¡Ğ´
+				//// æ‰©å±•åå°å†™
 				std::transform(strExt.begin(), strExt.end(), strExt.begin(), ::tolower);
 
 				char tmp[512];

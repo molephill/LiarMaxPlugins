@@ -1,16 +1,24 @@
 #include "LiarMaterial.h"
+
+#ifndef PLUGINS
 #include <stb_image.h>
+#endif // !PLUGINS
 
 namespace Liar
 {
 
 	// ====================  Œ∆¿Ì ================
 
-	LiarTexture::LiarTexture():m_name(""), m_shininess(0.0f),m_refCount(0)
+	LiarTexture::LiarTexture():m_name(""), m_shininess(0.0f)
 	{
 		m_ambient = new Liar::Vector3D();
 		m_diffuse = new Liar::Vector3D();
 		m_specular = new Liar::Vector3D();
+
+#ifndef PLUGINS
+		m_refCount = 0;
+#endif // PLUGINS
+
 	}
 
 

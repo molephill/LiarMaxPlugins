@@ -101,8 +101,11 @@ namespace Liar
 	LiarMesh::LiarMesh() :
 		m_geometry(new Liar::LiarGeometry())
 		, m_material(new Liar::LiarMaterial())
-		, m_refCount(0)
 	{
+#ifndef PLUGINS
+		m_refCount = 0;
+#endif // !PLUGINS
+
 	}
 
 
