@@ -10,7 +10,7 @@
 
 namespace Liar
 {
-    AssetsMgr::AssetsMgr()
+    AssetsMgr::AssetsMgr():m_allTextures(nullptr),m_allMeshes(nullptr)
     {
     }
     
@@ -18,7 +18,7 @@ namespace Liar
     {
     }
 
-	Liar::LiarMesh* AssetsMgr::GetMesh(const char* fileName)
+	Liar::LiarMesh* AssetsMgr::GetMesh(const char* fileName, const char* base)
 	{
 		if (!m_allMeshes) m_allMeshes = new std::vector<Liar::LiarMesh*>();
 		size_t len = m_allMeshes->size();
@@ -35,7 +35,7 @@ namespace Liar
 
 		if (ret == nullptr)
 		{
-			ret = Liar::LiarMeshRead::ReadMesh(fileName);
+			ret = Liar::LiarMeshRead::ReadMesh(fileName, base);
 			ret->meshName = fileName;
 			ret->Upload();
 			m_allMeshes->push_back(ret);
@@ -46,9 +46,9 @@ namespace Liar
 		return ret;
 	}
 
-	Liar::LiarMesh* AssetsMgr::GetMesh(const std::string& fileName)
+	Liar::LiarMesh* AssetsMgr::GetMesh(const std::string& fileName, const char* base)
 	{
-		return GetMesh(fileName.data());
+		return GetMesh(fileName.data(), base);
 	}
 
 	Liar::LiarTexture* AssetsMgr::GetTexture(const char* fileName)
@@ -65,10 +65,10 @@ namespace Liar
 				break;
 			}
 		}
-
+        
 		if (ret == nullptr)
-		{				
-			ret = new Liar::LiarTexture();
+        {
+            ret = new Liar::LiarTexture();
 			ret->Upload(fileName);
 			ret->AddRef();
 			m_allTextures->push_back(ret);

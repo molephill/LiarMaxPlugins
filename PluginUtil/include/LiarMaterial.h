@@ -51,6 +51,8 @@ namespace Liar
 
 		void Upload(const char*);
 		void Upload(const std::string&);
+        
+        unsigned int GetTextureId() {return m_textureId;};
 
 		void Render(Liar::Shader&, int);
 #endif // ! PLUGINS

@@ -7,7 +7,7 @@
 
 namespace Liar
 {
-	Liar::LiarMesh* LiarMeshRead::ReadMesh(const char* path)
+	Liar::LiarMesh* LiarMeshRead::ReadMesh(const char* path, const char* baseTexturePath)
 	{
 		FILE* pFile;
 #ifndef __APPLE__
@@ -21,8 +21,15 @@ namespace Liar
 		}
 		else
 		{
-			basePath = path;
-			basePath = Liar::StringUtil::GetHead(basePath, "/");
+			if(!baseTexturePath)
+            {
+                basePath = path;
+                basePath = Liar::StringUtil::GetHead(basePath, "/");
+            }
+            else
+            {
+                basePath = baseTexturePath;
+            }
 
 			Liar::LiarMesh* mesh = new Liar::LiarMesh();
 			ReadLiarMesh(mesh, pFile);
