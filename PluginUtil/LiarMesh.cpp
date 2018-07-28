@@ -58,7 +58,7 @@ namespace Liar
 		size_t uvOffSize = Liar::LiarVertexBuffer::GetUVOffSize();
 
 		glBufferData(GL_ARRAY_BUFFER, totalSize, nullptr, GL_STATIC_DRAW);
-		for (size_t i = 0; i < m_bufferSize; ++i)
+		for (int i = 0; i < m_bufferSize; ++i)
 		{
 			size_t start = i * oneSize;
 			Liar::LiarVertexBuffer* buffData = m_allVertexBuffers->at(i);
@@ -98,9 +98,10 @@ namespace Liar
 
 	// =============================== Geometory ===============================
 
-	LiarMesh::LiarMesh():
+	LiarMesh::LiarMesh() :
 		m_geometry(new Liar::LiarGeometry())
-		,m_material(new Liar::LiarMaterial())
+		, m_material(new Liar::LiarMaterial())
+		, m_refCount(0)
 	{
 	}
 
@@ -121,6 +122,7 @@ namespace Liar
 	void LiarMesh::Render(Liar::Shader& shader)
 	{
 		m_geometry->Render();
+		m_material->Render(shader);
 	}
 
 #endif // PLUGINS

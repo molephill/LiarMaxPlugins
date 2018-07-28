@@ -8,8 +8,7 @@
 #include <LiarStringUtil.h>
 
 #ifndef PLUGINS
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
+#include "Shader.hpp"
 #endif // !PLUGINS
 
 namespace Liar
@@ -32,7 +31,7 @@ namespace Liar
 
 	public:
 		std::string& GetName() { return m_name; };
-		void SetPath(char* v) { m_name = v; };
+		void SetPath(const char* v) { m_name = v; };
 		void SetPath(const std::string& v) { m_name = v; };
 
 		Liar::Vector3D* GetAmbient() { return m_ambient; };
@@ -40,6 +39,21 @@ namespace Liar
 		Liar::Vector3D* GetSpecular() { return m_specular; };
 		float GetShininess() { return m_shininess; };
 		void SetShininess(float v) { m_shininess = v; };
+
+#ifndef PLUGINS
+	private:
+		unsigned int m_refCount;
+		unsigned int m_textureId;
+
+	public:
+		void AddRef() { ++m_refCount; };
+		unsigned int SubRef() { return --m_refCount; };
+
+		void Upload(const char*);
+		void Upload(const std::string&);
+
+		void Render(Liar::Shader&);
+#endif // ! PLUGINS
 
 	};
 
@@ -63,13 +77,14 @@ namespace Liar
 
 		int GetTexSize() { return m_textureSize; };
 		void SetTexSize(int v) { m_textureSize = v; };
-        
-    public:
-        void Upload();
+       
 
 #ifdef PLUGINS
 	public:
 		std::string name;
+#else
+	public:
+		void Render(Liar::Shader&);
 #endif // PLUGINS
 
 	};

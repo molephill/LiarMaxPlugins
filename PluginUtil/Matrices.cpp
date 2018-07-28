@@ -961,8 +961,8 @@ namespace Liar
 		//this->SetCol(2, forward);
 
 		// compute forward vector and normalize
-		Liar::Vector3D* forward = new Liar::Vector3D(tx, ty, tz);
-		forward->Sub(m.s[12], m.s[13], m.s[14]);
+		Liar::Vector3D* forward = new Liar::Vector3D(m.s[12], m.s[13], m.s[14]);
+		forward->Sub(tx, ty, tz);
 		forward->Normalize();
 
 		// compute left vector

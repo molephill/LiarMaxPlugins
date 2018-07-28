@@ -1,5 +1,10 @@
 #include "LiarMeshRead.h"
 
+#ifndef PLUGINS
+#include <AssetsMgr.hpp>
+#endif // !PLUGINS
+
+
 namespace Liar
 {
 	Liar::LiarMesh* LiarMeshRead::ReadMesh(const char* path)
@@ -16,6 +21,9 @@ namespace Liar
 		}
 		else
 		{
+			basePath = path;
+			basePath = Liar::StringUtil::GetHead(basePath, "/");
+
 			Liar::LiarMesh* mesh = new Liar::LiarMesh();
 			ReadLiarMesh(mesh, pFile);
 			fclose(pFile);
@@ -72,9 +80,8 @@ namespace Liar
 		// read texture
 		for (int i = 0; i < texSize; ++i)
 		{
-			Liar::LiarTexture* tex = new Liar::LiarTexture();
+			Liar::LiarTexture* tex = ReadLiarTexture(pFile);
 			mat->GetTextures()->push_back(tex);
-			ReadLiarTexture(tex, pFile);
 		}
 	}
 
@@ -92,12 +99,22 @@ namespace Liar
 		fread(buff->uv, p2Size, 1, pFile);
 	}
 
-	void LiarMeshRead::ReadLiarTexture(Liar::LiarTexture* tex, FILE* pFile)
+	Liar::LiarTexture* LiarMeshRead::ReadLiarTexture(FILE* pFile)
 	{
 		// read name
 		//fread(&(tex->GetName()), sizeof(std::string), 1, pFile);
-		ReadString(tex->GetName(), pFile);
+		std::string baseName;
+		ReadString(baseName, pFile);
 
+#ifdef PLUGINS
+		Liar::LiarTexture* tex = new Liar::LiarTexture();
+#else
+		baseName = LiarMeshRead::basePath + '/' + baseName;
+		Liar::LiarTexture* tex = AssetsMgr::GetInstance().GetTexture(baseName);
+#endif // PLUGINS
+
+		// set name
+		tex->SetPath(baseName);
 		size_t p3Size = sizeof(Liar::Vector3D);
 		// write Ambient
 		fread(tex->GetAmbient(), p3Size, 1, pFile);
@@ -109,6 +126,8 @@ namespace Liar
 		float shininess = 0;
 		fread(&shininess, sizeof(float), 1, pFile);
 		tex->SetShininess(shininess);
+
+		return tex;
 	}
 
 	void LiarMeshRead::ReadString(std::string& s, FILE* pFile)
@@ -122,4 +141,6 @@ namespace Liar
 			s.push_back(a);
 		}
 	}
+
+	std::string LiarMeshRead::basePath = "";
 }

@@ -78,6 +78,13 @@ namespace Liar
 	public:
 		void Upload();
 		void Render(Liar::Shader&);
+
+	private:
+		unsigned int m_refCount;
+
+	public:
+		void AddRef() { ++m_refCount; };
+		unsigned int SubRef() { return --m_refCount; };
 #endif // !PLUGINS
 
 	};

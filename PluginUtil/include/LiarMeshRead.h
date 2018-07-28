@@ -2,6 +2,7 @@
 
 #include <LiarMesh.h>
 
+#include <string>
 #include <stdio.h>
 
 namespace Liar
@@ -17,9 +18,11 @@ namespace Liar
 		static void ReadLiarMaterial(Liar::LiarMaterial*, FILE*);
 
 		static void ReadLiarVertexBuffer(Liar::LiarVertexBuffer*, FILE*);
-		static void ReadLiarTexture(Liar::LiarTexture*, FILE*);
+		static Liar::LiarTexture* ReadLiarTexture(FILE*);
 
 		static void ReadString(std::string&, FILE*);
+
+		static std::string basePath;
 	};
 }
 
