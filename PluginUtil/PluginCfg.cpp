@@ -2,7 +2,7 @@
 
 namespace Liar
 {
-	PluginCfg::PluginCfg():meshExportType(LiarMeshExportType::NORMAL_CHIRLD)
+	PluginCfg::PluginCfg():meshExportType(LiarMeshExportType::NORMAL_CHIRLD),posNormalize(true)
 	{
 	}
 

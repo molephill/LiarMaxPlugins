@@ -175,7 +175,7 @@ namespace Liar
 				//取得色彩数组中对应三角面各顶点色彩值的三个索引。
 				int tSrcColorIndex1 = tface.getTVert(0);
 				int tSrcColorIndex2 = tface.getTVert(1);
-				int	 tSrcColorIndex3 = tface.getTVert(2);
+				int	tSrcColorIndex3 = tface.getTVert(2);
 				//取得模型三角面的三个索引。
 				int tDestColorIndex1 = mesh->faces[i].v[0];
 				int tDestColorIndex2 = mesh->faces[i].v[1];

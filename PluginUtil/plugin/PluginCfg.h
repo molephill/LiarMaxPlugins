@@ -19,6 +19,7 @@ namespace Liar
 
 	public:
 		int meshExportType;
+		bool posNormalize
 	};
 }
 
