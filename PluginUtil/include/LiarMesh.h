@@ -16,6 +16,17 @@
 namespace Liar
 {
 
+	class LiarNode
+	{
+	public:
+		LiarNode(const char*);
+		~LiarNode();
+
+	private:
+		std::string m_nodeName;
+		std::std::vector<Liar::LiarNode*> m_children;
+	};
+
 	class LiarGeometry
 	{
 	public:

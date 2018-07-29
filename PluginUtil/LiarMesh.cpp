@@ -2,6 +2,22 @@
 
 namespace Liar
 {
+
+	// =============================== Nodes ===============================
+
+	LiarNode::LiarNode(const char* nodeName)
+		:m_nodeName(nodeName)
+	{
+
+	}
+
+	LiarNode::~LiarNode()
+	{
+
+	}
+
+	// =============================== Nodes ===============================
+
 	// =============================== Geometory ===============================
 
 	LiarGeometry::LiarGeometry()
