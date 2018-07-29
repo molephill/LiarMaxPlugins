@@ -166,7 +166,7 @@ namespace Liar
 		//如果有顶点有色彩赋值。
 		if (mesh->numCVerts > 0)
 		{
-			int tFaceNum = mesh->getNumFaces() / 3;
+			int tFaceNum = mesh->getNumFaces();
 			//遍历每个三角面
 			for (int i = 0; i < tFaceNum; i++)
 			{
@@ -201,7 +201,7 @@ namespace Liar
 		//如果有顶点有纹理坐标赋值。
 		if (mesh->numTVerts > 0)
 		{
-			int tFaceNum = mesh->getNumFaces() / 3;
+			int tFaceNum = mesh->getNumFaces();
 			//顶点
 			for (int i = 0; i < tFaceNum; i++)
 			{
