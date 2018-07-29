@@ -70,8 +70,8 @@ namespace Liar
 		static InstanceConfirm m_confirm;  //最后保证main函数之前完成初始化
 
 	public:
-		LiarMesh* GetMesh(const char*);
-		LiarMesh* GetMesh(const std::string&);
+		LiarMesh* GetMesh(const char*, const char* base=nullptr);
+		LiarMesh* GetMesh(const std::string&, const char* base=nullptr);
 
 		Liar::LiarTexture* GetTexture(const char*);
 		Liar::LiarTexture* GetTexture(const std::string&);

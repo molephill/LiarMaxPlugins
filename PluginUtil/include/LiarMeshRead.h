@@ -10,7 +10,7 @@ namespace Liar
 	class LiarMeshRead
 	{
 	public:
-		static Liar::LiarMesh* ReadMesh(const char* path);
+		static Liar::LiarMesh* ReadMesh(const char* path, const char* basePath=nullptr);
 
 	private:
 		static void ReadLiarMesh(Liar::LiarMesh*, FILE*);
