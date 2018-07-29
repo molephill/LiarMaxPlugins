@@ -2,37 +2,29 @@
 
 #ifndef PLUGINS
 #include <stb_image.h>
+#include <AssetsMgr.hpp>
 #endif // !PLUGINS
 
 namespace Liar
 {
 
-	// ====================  纹理 ================
-
-	LiarTexture::LiarTexture():m_name(""), m_shininess(0.0f)
+	// ====================  纹理内容 ================
+	LiarTexContext::LiarTexContext() :m_path("")
 	{
-		m_ambient = new Liar::Vector3D();
-		m_diffuse = new Liar::Vector3D();
-		m_specular = new Liar::Vector3D();
-
 #ifndef PLUGINS
-		m_refCount = 0;
-#endif // PLUGINS
+		m_textureId = 0;
+#endif // !PLUGINS
 
 	}
 
-
-	LiarTexture::~LiarTexture()
+	LiarTexContext::~LiarTexContext()
 	{
-		delete m_ambient;
-		delete m_diffuse;
-		delete m_specular;
 	}
 
 #ifndef PLUGINS
-	void LiarTexture::Upload(const char* fileName)
+	void LiarTexContext::Upload(const char* fileName)
 	{
-		m_name = fileName;
+		m_path = fileName;
 
 		int width, height, nrComponents;
 		unsigned char *data = stbi_load(fileName, &width, &height, &nrComponents, 0);
@@ -63,18 +55,56 @@ namespace Liar
 		}
 	}
 
-	void LiarTexture::Upload(const std::string& fileName)
+	void LiarTexContext::Upload(const std::string& fileName)
 	{
 		Upload(fileName.data());
 	}
+#endif // !PLUGINS
 
+
+	// ====================  纹理内容 ================
+
+	// ====================  纹理 ================
+
+	LiarTexture::LiarTexture():m_name(""), m_shininess(0.0f)
+	{
+		m_ambient = new Liar::Vector3D();
+		m_diffuse = new Liar::Vector3D();
+		m_specular = new Liar::Vector3D();
+	}
+
+
+	LiarTexture::~LiarTexture()
+	{
+		delete m_ambient;
+		delete m_diffuse;
+		delete m_specular;
+	}
+
+	void LiarTexture::SetPath(const char* path)
+	{
+		m_name = path;
+
+#ifndef PLUGINS
+		m_texContext = AssetsMgr::GetInstance().GetTexContext(m_name);
+#endif // !PLUGINS
+
+	}
+
+	void LiarTexture::SetPath(const std::string& path)
+	{
+		SetPath(path.data());
+	}
+
+#ifndef PLUGINS
 	void LiarTexture::Render(Liar::Shader& shader, int i)
 	{
+		if (!m_texContext) return;
 		std::string name = "texture";
 		name = name + std::to_string(i);
 		shader.SetInt(name, i);
 		glActiveTexture(GL_TEXTURE0 + i);
-		glBindTexture(GL_TEXTURE_2D, m_textureId);
+		glBindTexture(GL_TEXTURE_2D, m_texContext->GetTextureId());
 	}
 
 #endif // !PLUGINS

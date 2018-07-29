@@ -1,13 +1,9 @@
 #include "LiarMeshRead.h"
 
-#ifndef PLUGINS
-#include <AssetsMgr.hpp>
-#endif // !PLUGINS
-
 
 namespace Liar
 {
-	Liar::LiarMesh* LiarMeshRead::ReadMesh(const char* path, const char* baseTexturePath)
+	Liar::LiarMesh* LiarMeshRead::ReadMesh(const char* path, const char* texBasePath)
 	{
 		FILE* pFile;
 #ifndef __APPLE__
@@ -21,15 +17,15 @@ namespace Liar
 		}
 		else
 		{
-			if(!baseTexturePath)
-            {
-                basePath = path;
-                basePath = Liar::StringUtil::GetHead(basePath, "/");
-            }
-            else
-            {
-                basePath = baseTexturePath;
-            }
+			if (!texBasePath)
+			{
+				basePath = path;
+				basePath = Liar::StringUtil::GetHead(basePath, "/");
+			}
+			else
+			{
+				basePath = texBasePath;
+			}
 
 			Liar::LiarMesh* mesh = new Liar::LiarMesh();
 			ReadLiarMesh(mesh, pFile);
@@ -108,17 +104,13 @@ namespace Liar
 
 	Liar::LiarTexture* LiarMeshRead::ReadLiarTexture(FILE* pFile)
 	{
+		Liar::LiarTexture* tex = new Liar::LiarTexture();
+
 		// read name
 		//fread(&(tex->GetName()), sizeof(std::string), 1, pFile);
 		std::string baseName;
 		ReadString(baseName, pFile);
-
-#ifdef PLUGINS
-		Liar::LiarTexture* tex = new Liar::LiarTexture();
-#else
-		baseName = LiarMeshRead::basePath + '/' + baseName;
-		Liar::LiarTexture* tex = AssetsMgr::GetInstance().GetTexture(baseName);
-#endif // PLUGINS
+		baseName = basePath + baseName;
 
 		// set name
 		tex->SetPath(baseName);
