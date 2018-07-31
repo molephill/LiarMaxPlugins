@@ -4,12 +4,6 @@
 
 namespace Liar
 {
-	enum LiarMeshExportType
-	{
-		NORMAL_CHIRLD,
-		INDEPENDENT_CHIRLD
-	};
-
 	class PluginCfg
 	{
 	public:
@@ -17,8 +11,13 @@ namespace Liar
 		~PluginCfg();
 
 	public:
-		int meshExportType;
 		bool posNormalize;
+		bool uvZY;
+
+		bool exportPos;
+		bool exportNormal;
+		bool exportColor;
+		bool exportUV;
 	};
 }
 

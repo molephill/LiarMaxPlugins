@@ -51,6 +51,8 @@ namespace Liar
 
 		std::vector<unsigned int>* m_indices;
 
+		int m_vertexOpen;
+
 	public:
 		std::vector<Liar::LiarVertexBuffer*>* GetBuffers() { return m_allVertexBuffers; };
 		std::vector<unsigned int>* GetIndices() { return m_indices; };
@@ -63,6 +65,8 @@ namespace Liar
 		LiarVertexBuffer* GetBuffer(int index) { return m_allVertexBuffers->at(index); };
 
 		void EraseIndexBuff(int);
+
+		void SetVertexOpen(int v) { m_vertexOpen = v; };
         
 #ifndef PLUGINS
     public:

@@ -119,4 +119,14 @@ namespace Liar
             return sourceStr + baseStr;
         }
 	};
+
+	// ============================= version eg.. ctr =========================
+	class LairVersionCtr
+	{
+	public:
+		static bool CheckVertexOpen(int ver, int pos)
+		{
+			return ((ver >> pos) & 1) > 0;
+		}
+	};
 }

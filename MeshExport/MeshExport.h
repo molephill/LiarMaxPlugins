@@ -60,6 +60,7 @@ namespace Liar
 	public:
 		int ExportMesh(const char* szMeshName);
 		LiarMeshParse* GetMeshExport() { return m_meshParse; };
+		void SetExportParam(WPARAM, int state = BST_CHECKED);
 	};
 
 	class MeshExportClassDesc : public ClassDesc2

@@ -40,7 +40,9 @@ namespace Liar
 		Liar::LiarMesh* GetOrNewMesh(int&);
 		Liar::LiarMesh* GetMesh(int);
 
+	public:
 		Liar::LiarNode* rootNode;
+		int vertexOpen;
 
 	private:
 		void ParseLiarGeometry(Liar::LiarGeometry*, Mesh*, bool zy = true);

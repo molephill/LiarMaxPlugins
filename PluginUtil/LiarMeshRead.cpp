@@ -1,7 +1,10 @@
 #include "LiarMeshRead.h"
+#include <LiarStringUtil.h>
 
 namespace Liar
 {
+
+#ifndef PLUGINS
 	// ======================= read model ===========================
 	Liar::Model* LiarMeshRead::ReadModel(const char* path, const char* texBasePath)
 	{
@@ -30,6 +33,8 @@ namespace Liar
 			}
 		}
 	}
+#endif // !PLUGINS
+
 	// ======================= read model ===========================
 
 	void LiarMeshRead::ReadNode(const char* path, Liar::LiarNode& node)
@@ -111,17 +116,23 @@ namespace Liar
 		// read ver
 		unsigned int ver = 0;
 		fread(&ver, sizeof(unsigned int), 1, pFile);
+		// read vertex open status
+		int vertexOpen = 0;
+		fread(&vertexOpen, sizeof(int), 1, pFile);
 		// read mesh`s name
 		//fread(&(mesh->meshName), sizeof(std::string), 1, pFile);
 		ReadString(mesh->meshName, pFile);
 		// read mesh`s Geometery
-		ReadLiarGeometery(mesh->GetGeo(), pFile);
+		ReadLiarGeometery(vertexOpen, mesh->GetGeo(), pFile);
 		// read mesh`s material
 		ReadLiarMaterial(mesh->GetMat(), pFile);
 	}
 
-	void LiarMeshRead::ReadLiarGeometery(Liar::LiarGeometry* geo, FILE* pFile)
+	void LiarMeshRead::ReadLiarGeometery(int vertexOpen, Liar::LiarGeometry* geo, FILE* pFile)
 	{
+		// set vertex open
+		geo->SetVertexOpen(vertexOpen);
+
 		// read indices count;
 		int indiceSize = 0;
 		fread(&indiceSize, sizeof(int), 1, pFile);
@@ -137,12 +148,17 @@ namespace Liar
 		int bufferSize = 0;
 		fread(&bufferSize, sizeof(int), 1, pFile);
 		geo->SetBufferSize(bufferSize);
+		// check vertexopen
+		bool pos = Liar::LairVersionCtr::CheckVertexOpen(vertexOpen, LIAR_POSITION);
+		bool normal = Liar::LairVersionCtr::CheckVertexOpen(vertexOpen, LIAR_NORMAL);
+		bool color = Liar::LairVersionCtr::CheckVertexOpen(vertexOpen, LIAR_COLOR);
+		bool uv = Liar::LairVersionCtr::CheckVertexOpen(vertexOpen, LIAR_UV);
 		// read buffer
 		for (int i = 0; i < bufferSize; ++i)
 		{
 			Liar::LiarVertexBuffer* buffer = new Liar::LiarVertexBuffer();
 			geo->GetBuffers()->push_back(buffer);
-			ReadLiarVertexBuffer(buffer, pFile);
+			ReadLiarVertexBuffer(buffer, pFile, pos, normal, color, uv);
 		}
 	}
 
@@ -160,18 +176,34 @@ namespace Liar
 		}
 	}
 
-	void LiarMeshRead::ReadLiarVertexBuffer(Liar::LiarVertexBuffer* buff, FILE* pFile)
+	void LiarMeshRead::ReadLiarVertexBuffer(Liar::LiarVertexBuffer* buff, FILE* pFile, bool pos, bool normal, bool color, bool uv)
 	{
 		size_t p3Size = sizeof(Liar::Vector3D);
-		// write pos
-		fread(buff->position, p3Size, 1, pFile);
-		// write normal
-		fread(buff->normal, p3Size, 1, pFile);
-		// write color
-		fread(buff->color, p3Size, 1, pFile);
-		// write uv
-		size_t p2Size = sizeof(Liar::Vector2D);
-		fread(buff->uv, p2Size, 1, pFile);
+		// read pos
+		if (pos)
+		{
+			buff->position = new Liar::Vector3D();
+			fread(buff->position, p3Size, 1, pFile);
+		}
+		// read normal
+		if (normal)
+		{
+			buff->normal = new Liar::Vector3D();
+			fread(buff->normal, p3Size, 1, pFile);
+		}
+		// read color
+		if (color)
+		{
+			buff->color = new Liar::Vector3D();
+			fread(buff->color, p3Size, 1, pFile);
+		}
+		// read uv
+		if (uv)
+		{
+			size_t p2Size = sizeof(Liar::Vector2D);
+			buff->uv = new Liar::Vector2D();
+			fread(buff->uv, p2Size, 1, pFile);
+		}
 	}
 
 	Liar::LiarTexture* LiarMeshRead::ReadLiarTexture(FILE* pFile)

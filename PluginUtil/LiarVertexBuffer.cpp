@@ -3,21 +3,17 @@
 namespace Liar
 {
 
-	LiarVertexBuffer::LiarVertexBuffer()
+	LiarVertexBuffer::LiarVertexBuffer():position(nullptr), normal(nullptr), color(nullptr), uv(nullptr)
 	{
-		position = new Liar::Vector3D();
-		normal = new Liar::Vector3D();
-		color = new Liar::Vector3D();
-		uv = new Liar::Vector2D();
 	}
 
 
 	LiarVertexBuffer::~LiarVertexBuffer()
 	{
-		delete position;
-		delete normal;
-		delete color;
-		delete uv;
+		if (position) delete position;
+		if (normal) delete normal;
+		if (color) delete color;
+		if (uv) delete uv;
 	}
 
 #ifndef PLUGINS

@@ -6,7 +6,7 @@
 
 namespace Liar
 {
-	LiarMeshParse::LiarMeshParse()
+	LiarMeshParse::LiarMeshParse():rootNode(nullptr), vertexOpen(0)
 	{
 		m_allMeshs = new std::vector<Liar::LiarMesh*>();
 		m_meshSize = 0;
@@ -106,8 +106,8 @@ namespace Liar
 	{
 		std::vector<unsigned int>().swap(*(geo->GetIndices()));
 		ParseLiarGeometryBuffers(geo, mesh, zy);
-		ParseLiarGeometryColor(geo, mesh, zy);
-		ParseLiarGeometryUV(geo, mesh, zy);
+		if (liarPluginCfg->exportColor) ParseLiarGeometryColor(geo, mesh, zy);
+		if (liarPluginCfg->exportUV) ParseLiarGeometryUV(geo, mesh, zy);
 	}
 
 	void LiarMeshParse::ParseLiarGeometryBuffers(Liar::LiarGeometry* geo, Mesh* mesh, bool zy)
@@ -120,6 +120,10 @@ namespace Liar
 			if (i >= bufferSize)
 			{
 				buff = new Liar::LiarVertexBuffer();
+				if (liarPluginCfg->exportPos && !buff->position) buff->position = new Liar::Vector3D();
+				if (liarPluginCfg->exportNormal && !buff->normal) buff->normal = new Liar::Vector3D();
+				if (liarPluginCfg->exportColor && !buff->color) buff->color = new Liar::Vector3D();
+				if (liarPluginCfg->exportUV && !buff->uv) buff->uv = new Liar::Vector2D();
 				geo->GetBuffers()->push_back(buff);
 				geo->SetBufferSize(++bufferSize);
 			}
@@ -148,7 +152,10 @@ namespace Liar
 	{
 		//位置，要注意的是在3ds max中z值是朝上的，y值是朝前的，而在我们的游戏中,y值朝上，z值朝前。所以要做下处理。
 		Liar::LiarStructUtil::ParsePoint3(buff->position, mesh->verts[index], zy);
-		Liar::LiarStructUtil::ParsePoint3(buff->normal, mesh->getNormal(index), zy);
+		if (liarPluginCfg->exportNormal)
+		{
+			Liar::LiarStructUtil::ParsePoint3(buff->normal, mesh->getNormal(index), zy);
+		}
 	}
 
 	void LiarMeshParse::ParseLiarGeometryColor(Liar::LiarGeometry* geo, Mesh* mesh, bool zy)

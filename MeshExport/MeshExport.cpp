@@ -42,7 +42,18 @@ INT_PTR CALLBACK MeshExportOptionsDlgProc(HWND hWnd,UINT message,WPARAM wParam,L
 				// 初始化
 				G_hListBox = ::GetDlgItem(hWnd, IDC_LIST_EXPORT_INFO);
 
-				
+				// 初始化导出项
+				if (imp)
+				{
+					SetCheckBox(hWnd, IDC_CHECK_POS, TRUE);
+					SetCheckBox(hWnd, IDC_CHECK_NORMAL, TRUE);
+					SetCheckBox(hWnd, IDC_CHECK_UV, TRUE);
+					imp->SetExportParam(IDC_CHECK_POS, GetCheckBox(hWnd, IDC_CHECK_POS));
+					imp->SetExportParam(IDC_CHECK_NORMAL, GetCheckBox(hWnd, IDC_CHECK_NORMAL));
+					imp->SetExportParam(IDC_CHECK_COLOR, GetCheckBox(hWnd, IDC_CHECK_COLOR));
+					imp->SetExportParam(IDC_CHECK_UV, GetCheckBox(hWnd, IDC_CHECK_UV));
+				}
+
 				std::string strFileName = Liar::StringUtil::GetLast(imp->GetMeshExport()->GetExportPathName());
 				//去掉扩展名
 				std::string strFileName_NoExt = Liar::StringUtil::GetHead(strFileName);
@@ -73,6 +84,17 @@ INT_PTR CALLBACK MeshExportOptionsDlgProc(HWND hWnd,UINT message,WPARAM wParam,L
 						std::string tmp("");
 						Liar::StringUtil::GetWSTR2Char(szMeshName, tmp);
 						imp->ExportMesh(tmp.c_str());
+					}
+					EndDialog(hWnd, 1);
+					return TRUE;
+				case IDC_CHECK_POS:
+				case IDC_CHECK_NORMAL:
+				case IDC_CHECK_COLOR:
+				case IDC_CHECK_UV:
+					if (imp)
+					{
+						int state = GetCheckBox(hWnd, wParam);
+						imp->SetExportParam(wParam, state);
 					}
 					return TRUE;
 				default:
@@ -120,6 +142,28 @@ namespace Liar
 		}
 
 		return 0;
+	}
+
+	void MeshExport::SetExportParam(WPARAM wParam, int state)
+	{
+		bool status = state == BST_CHECKED ? true : false;
+		switch (wParam)
+		{
+		case IDC_CHECK_POS:
+			GetMeshExport()->liarPluginCfg->exportPos = status;
+			break;
+		case IDC_CHECK_NORMAL:
+			GetMeshExport()->liarPluginCfg->exportNormal = status;
+			break;
+		case IDC_CHECK_COLOR:
+			GetMeshExport()->liarPluginCfg->exportColor = status;
+			break;
+		case IDC_CHECK_UV:
+			GetMeshExport()->liarPluginCfg->exportUV = status;
+			break;
+		default:
+			break;
+		}
 	}
 
 // ==================================== self =====================================

@@ -38,7 +38,7 @@ namespace Liar
 
 	// =============================== Geometory ===============================
 
-	LiarGeometry::LiarGeometry()
+	LiarGeometry::LiarGeometry():m_vertexOpen(0)
 	{
 		m_allVertexBuffers = new std::vector<Liar::LiarVertexBuffer*>();
 		m_bufferSize = 0;
@@ -83,13 +83,44 @@ namespace Liar
 		size_t colorSize = Liar::LiarVertexBuffer::GetColorSize();
 		size_t uvSize = Liar::LiarVertexBuffer::GetUVSize();
 
-		size_t oneSize = Liar::LiarVertexBuffer::GetBuffSize();
-		size_t totalSize = m_bufferSize * oneSize;
+		bool pos = Liar::LairVersionCtr::CheckVertexOpen(m_vertexOpen, LIAR_POSITION);
+		bool normal = Liar::LairVersionCtr::CheckVertexOpen(m_vertexOpen, LIAR_NORMAL);
+		bool color = Liar::LairVersionCtr::CheckVertexOpen(m_vertexOpen, LIAR_COLOR);
+		bool uv = Liar::LairVersionCtr::CheckVertexOpen(m_vertexOpen, LIAR_UV);
 
 		size_t positionOffSize = Liar::LiarVertexBuffer::GetPositionOffSize();
 		size_t normalOffSize = Liar::LiarVertexBuffer::GetNormalOffSize();
 		size_t colorOffSize = Liar::LiarVertexBuffer::GetColorOffSize();
 		size_t uvOffSize = Liar::LiarVertexBuffer::GetUVOffSize();
+
+		size_t oneSize = positionSize;
+		if (normal) 
+		{
+			oneSize += normalSize;
+		}
+		else
+		{
+			normalSize = 0;
+		}
+
+		if (color)
+		{
+			oneSize += colorSize;
+		}
+		else
+		{
+			colorSize = 0;
+		}
+		colorOffSize = normalOffSize + normalSize;
+
+		if (uv)
+		{
+			oneSize += uvSize;
+			uvOffSize = colorOffSize + colorSize;
+		}
+
+		//size_t oneSize = Liar::LiarVertexBuffer::GetBuffSize();
+		size_t totalSize = m_bufferSize * oneSize;
 
 		glBufferData(GL_ARRAY_BUFFER, totalSize, nullptr, GL_STATIC_DRAW);
 		for (int i = 0; i < m_bufferSize; ++i)
@@ -97,27 +128,43 @@ namespace Liar
 			size_t start = i * oneSize;
 			Liar::LiarVertexBuffer* buffData = m_allVertexBuffers->at(i);
 			glBufferSubData(GL_ARRAY_BUFFER, start + positionOffSize, positionSize, buffData->position);
-			glBufferSubData(GL_ARRAY_BUFFER, start + normalOffSize, normalSize, buffData->normal);
-			glBufferSubData(GL_ARRAY_BUFFER, start + colorOffSize, colorSize, buffData->color);
-			glBufferSubData(GL_ARRAY_BUFFER, start + uvOffSize, uvSize, buffData->uv);
+			if (normal) glBufferSubData(GL_ARRAY_BUFFER, start + normalOffSize, normalSize, buffData->normal);
+			if (color) glBufferSubData(GL_ARRAY_BUFFER, start + colorOffSize, colorSize, buffData->color);
+			if (uv) glBufferSubData(GL_ARRAY_BUFFER, start + uvOffSize, uvSize, buffData->uv);
 		}
 
 		size_t indiceSize1 = GetIndicesSize() * sizeof(unsigned int);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indiceSize1, m_indices->data(), GL_STATIC_DRAW);
 
+		unsigned int curId = 0;
 		// position attribute
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, oneSize, (void*)positionOffSize);
-		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(curId, 3, GL_FLOAT, GL_FALSE, oneSize, (void*)positionOffSize);
+		glEnableVertexAttribArray(curId);
+		++curId;
+
 		// normal attribute
-		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, oneSize, (void*)normalOffSize);
-		glEnableVertexAttribArray(1);
+		if (normal)
+		{
+			glVertexAttribPointer(curId, 3, GL_FLOAT, GL_FALSE, oneSize, (void*)normalOffSize);
+			glEnableVertexAttribArray(curId);
+			++curId;
+		}
+
 		// color attribute
-		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, oneSize, (void*)colorOffSize);
-		glEnableVertexAttribArray(2);
+		if (color)
+		{
+			glVertexAttribPointer(curId, 3, GL_FLOAT, GL_FALSE, oneSize, (void*)colorOffSize);
+			glEnableVertexAttribArray(curId);
+			++curId;
+		}
+		
 		// texture coord attribute
-		glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, oneSize, (void*)uvOffSize);
-		glEnableVertexAttribArray(3);
+		if (uv)
+		{
+			glVertexAttribPointer(curId, 2, GL_FLOAT, GL_FALSE, oneSize, (void*)uvOffSize);
+			glEnableVertexAttribArray(curId);
+		}
 
 	}
 
