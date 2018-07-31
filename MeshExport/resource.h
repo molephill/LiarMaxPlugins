@@ -21,6 +21,10 @@
 #define IDC_CHECK_COLOR                 1010
 #define IDC_CHECK_UV                    1011
 #define IDC_STATIC_BUFF_INFO            1012
+#define IDC_CHECK_POS_NOR               1013
+#define IDC_CHECK_RE_ZY                 1014
+#define IDC_CHECK_SINGLE_MODEL          1015
+#define IDC_CHECK_RE_UV                 1016
 #define IDC_COLOR                       1456
 #define IDC_EDIT                        1490
 #define IDC_SPIN                        1496
@@ -31,7 +35,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        102
 #define _APS_NEXT_COMMAND_VALUE         40001
-#define _APS_NEXT_CONTROL_VALUE         1013
+#define _APS_NEXT_CONTROL_VALUE         1016
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

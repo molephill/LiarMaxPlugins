@@ -2,7 +2,9 @@
 
 namespace Liar
 {
-	PluginCfg::PluginCfg():posNormalize(true)
+	PluginCfg::PluginCfg()
+		:posNormalize(false), revertZY(true), revertUV(true), singleExportModel(false)
+		, exportPos(true), exportNormal(true), exportColor(false), exportUV(true)
 	{
 	}
 

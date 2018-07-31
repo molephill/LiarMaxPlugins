@@ -7,6 +7,23 @@ namespace Liar
 	{
 	}
 
+	LiarVertexBuffer::LiarVertexBuffer(bool Init)
+	{
+		if (Init)
+		{
+			position = new Liar::Vector3D();
+			normal = new Liar::Vector3D();
+			color = new Liar::Vector3D();
+			uv = new Liar::Vector2D();
+		}
+		else
+		{
+			position = nullptr;
+			normal = nullptr;
+			color = nullptr;
+			uv = nullptr;
+		}
+	}
 
 	LiarVertexBuffer::~LiarVertexBuffer()
 	{

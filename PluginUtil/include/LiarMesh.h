@@ -37,6 +37,8 @@ namespace Liar
 		std::string& GetNodeName() { return m_nodeName; };
 
 		std::vector<Liar::LiarNode*>* GetChildren() const { return m_children; };
+
+		int GetNumChildren() const { return m_children ? static_cast<int>(m_children->size()) : 0; };
 	};
 
 	class LiarGeometry

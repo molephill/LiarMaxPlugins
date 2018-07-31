@@ -12,7 +12,9 @@ namespace Liar
 
 	public:
 		bool posNormalize;
-		bool uvZY;
+		bool revertZY;
+		bool revertUV;
+		bool singleExportModel;
 
 		bool exportPos;
 		bool exportNormal;

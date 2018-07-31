@@ -133,6 +133,7 @@ namespace Liar
 			}
 
 			ParseLiarVertexBuffer(buff, mesh, i, zy);
+
 		}
 
 		geo->EraseIndexBuff(tVertexNum);
@@ -152,10 +153,8 @@ namespace Liar
 	{
 		//位置，要注意的是在3ds max中z值是朝上的，y值是朝前的，而在我们的游戏中,y值朝上，z值朝前。所以要做下处理。
 		Liar::LiarStructUtil::ParsePoint3(buff->position, mesh->verts[index], zy);
-		if (liarPluginCfg->exportNormal)
-		{
-			Liar::LiarStructUtil::ParsePoint3(buff->normal, mesh->getNormal(index), zy);
-		}
+		if (liarPluginCfg->posNormalize) buff->position->Normalize();
+		if (liarPluginCfg->exportNormal) Liar::LiarStructUtil::ParsePoint3(buff->normal, mesh->getNormal(index), zy);
 	}
 
 	void LiarMeshParse::ParseLiarGeometryColor(Liar::LiarGeometry* geo, Mesh* mesh, bool zy)
@@ -192,7 +191,7 @@ namespace Liar
 		}
 	}
 
-	void LiarMeshParse::ParseLiarGeometryUV(Liar::LiarGeometry* geo, Mesh* mesh, bool zy)
+	void LiarMeshParse::ParseLiarGeometryUV(Liar::LiarGeometry* geo, Mesh* mesh, bool)
 	{
 
 		//获取顶点纹理坐标
@@ -219,9 +218,9 @@ namespace Liar
 				Liar::LiarVertexBuffer* buff2 = geo->GetBuffers()->at(tDestTexIndex2);
 				Liar::LiarVertexBuffer* buff3 = geo->GetBuffers()->at(tDestTexIndex3);
 				//注意：在纹理的纵向上，3ds max与我们游戏中是反的，也需要做下处理。
-				Liar::LiarStructUtil::ParsePoint3(buff1->uv, mesh->tVerts[tSrcTexIndex1], zy);
-				Liar::LiarStructUtil::ParsePoint3(buff2->uv, mesh->tVerts[tSrcTexIndex2], zy);
-				Liar::LiarStructUtil::ParsePoint3(buff3->uv, mesh->tVerts[tSrcTexIndex3], zy);
+				Liar::LiarStructUtil::ParsePoint3(buff1->uv, mesh->tVerts[tSrcTexIndex1], liarPluginCfg->revertUV);
+				Liar::LiarStructUtil::ParsePoint3(buff2->uv, mesh->tVerts[tSrcTexIndex2], liarPluginCfg->revertUV);
+				Liar::LiarStructUtil::ParsePoint3(buff3->uv, mesh->tVerts[tSrcTexIndex3], liarPluginCfg->revertUV);
 			}
 		}
 	}
@@ -279,7 +278,7 @@ namespace Liar
 				Liar::StringUtil::GetHeadAndLast(fullName, name, strExt);
 
 				//// 扩展名小写
-				std::transform(strExt.begin(), strExt.end(), strExt.begin(), ::tolower);
+				Liar::StringUtil::StringToLower(strExt);
 
 				char tmp[512];
 				sprintf(tmp, "%s.%s", name.c_str(), strExt.c_str());

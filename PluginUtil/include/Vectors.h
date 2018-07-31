@@ -16,7 +16,7 @@ namespace Liar
 		float y;
 
 		// ctors
-		Vector2D() : x(0), y(0) {};
+		Vector2D() : x(0.0f), y(0.0f) {};
 		Vector2D(float x, float y) : x(x), y(y) {};
 
 		// utils functions
@@ -82,7 +82,7 @@ namespace Liar
 		float z;
 
 		// ctors
-		Vector3D() : x(0), y(0), z(0) {};
+		Vector3D() : x(0.0f), y(0.0f), z(0.0f) {};
 		Vector3D(float x, float y, float z) : x(x), y(y), z(z) {};
 
 		// utils functions
@@ -158,7 +158,7 @@ namespace Liar
 		float w;
 
 		// ctors
-		Vector4D() : x(0), y(0), z(0), w(0) {};
+		Vector4D() : x(0.0f), y(0.0f), z(0.0f), w(0.0f) {};
 		Vector4D(float x, float y, float z, float w) : x(x), y(y), z(z), w(w) {};
 
 		// utils functions

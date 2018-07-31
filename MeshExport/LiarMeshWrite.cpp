@@ -7,11 +7,27 @@ namespace Liar
 		Liar::LiarNode* rootNode = parse->rootNode;
 		// ignore root
 
+		int size = parse->GetMeshSize();
+		if (size <= 0) return;
+
 		std::string folder, last;
 		Liar::StringUtil::GetHeadAndLast(path, folder, last, "\\");
 
 		std::string baseName, ext;
 		Liar::StringUtil::GetHeadAndLast(last, baseName, ext, ".");
+		Liar::StringUtil::StringToLower(ext);
+
+		if (size == 1)
+		{
+			if (!parse->liarPluginCfg->singleExportModel)
+			{
+				char fullName[MAX_PATH];
+				sprintf_s(fullName, "%s.%s", baseName.c_str(), ext.c_str());
+				// set mesh`s saveName
+				SetMeshSaveName(parse, 0, fullName);
+				return;
+			}
+		}
 
 		char fullName[MAX_PATH];
 		sprintf_s(fullName, "%s\\%s.model", folder.c_str(), baseName.c_str());
@@ -22,7 +38,6 @@ namespace Liar
 
 		// set rootNode`name = baseName;
 		rootNode->SetNodeName(baseName);
-		Liar::StringUtil::StringToLower(ext);
 
 		WriteNode(parse, rootNode, ext.c_str(), hFile);
 
@@ -31,15 +46,13 @@ namespace Liar
 
 	void LiarMeshWrite::WriteNode(Liar::LiarMeshParse* parse, Liar::LiarNode* curNode, const char* ext, FILE* hFile)
 	{
-		int size = 0;
-		std::vector<Liar::LiarNode*>* children = curNode->GetChildren();
-		if (children) size = static_cast<int>(children->size());
+		int size = curNode->GetNumChildren();
 		// write nodeSize;
 		fwrite(&size, sizeof(int), 1, hFile);
 		for (int i = 0; i < size; ++i)
 		{
 			char saveName[MAX_PATH];
-			Liar::LiarNode* subNode = children->at(i);
+			Liar::LiarNode* subNode = curNode->GetChildren()->at(i);
 
 			std::string& curNodeName = curNode->GetNodeName();
 			std::string& subNodeName = subNode->GetNodeName();

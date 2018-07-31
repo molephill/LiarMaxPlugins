@@ -13,6 +13,7 @@ namespace Liar
 	{
 	public:
 		LiarVertexBuffer();
+		LiarVertexBuffer(bool);
 		~LiarVertexBuffer();
 
 	public:

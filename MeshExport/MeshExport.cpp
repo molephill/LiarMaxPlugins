@@ -45,13 +45,15 @@ INT_PTR CALLBACK MeshExportOptionsDlgProc(HWND hWnd,UINT message,WPARAM wParam,L
 				// 初始化导出项
 				if (imp)
 				{
-					SetCheckBox(hWnd, IDC_CHECK_POS, TRUE);
-					SetCheckBox(hWnd, IDC_CHECK_NORMAL, TRUE);
-					SetCheckBox(hWnd, IDC_CHECK_UV, TRUE);
-					imp->SetExportParam(IDC_CHECK_POS, GetCheckBox(hWnd, IDC_CHECK_POS));
-					imp->SetExportParam(IDC_CHECK_NORMAL, GetCheckBox(hWnd, IDC_CHECK_NORMAL));
-					imp->SetExportParam(IDC_CHECK_COLOR, GetCheckBox(hWnd, IDC_CHECK_COLOR));
-					imp->SetExportParam(IDC_CHECK_UV, GetCheckBox(hWnd, IDC_CHECK_UV));
+					Liar::PluginCfg* cfg = imp->GetMeshExport()->liarPluginCfg;
+					SetCheckBox(hWnd, IDC_CHECK_POS, cfg->exportPos);
+					SetCheckBox(hWnd, IDC_CHECK_NORMAL, cfg->exportNormal);
+					SetCheckBox(hWnd, IDC_CHECK_UV, cfg->exportUV);
+					SetCheckBox(hWnd, IDC_CHECK_COLOR, cfg->exportColor);
+					SetCheckBox(hWnd, IDC_CHECK_POS_NOR, cfg->posNormalize);
+					SetCheckBox(hWnd, IDC_CHECK_RE_ZY, cfg->revertZY);
+					SetCheckBox(hWnd, IDC_CHECK_RE_UV, cfg->revertUV);
+					SetCheckBox(hWnd, IDC_CHECK_SINGLE_MODEL, cfg->singleExportModel);
 				}
 
 				std::string strFileName = Liar::StringUtil::GetLast(imp->GetMeshExport()->GetExportPathName());
@@ -85,12 +87,16 @@ INT_PTR CALLBACK MeshExportOptionsDlgProc(HWND hWnd,UINT message,WPARAM wParam,L
 						Liar::StringUtil::GetWSTR2Char(szMeshName, tmp);
 						imp->ExportMesh(tmp.c_str());
 					}
-					EndDialog(hWnd, 1);
+					EndDialog(hWnd, IDOK);
 					return TRUE;
 				case IDC_CHECK_POS:
 				case IDC_CHECK_NORMAL:
 				case IDC_CHECK_COLOR:
 				case IDC_CHECK_UV:
+				case IDC_CHECK_POS_NOR:
+				case IDC_CHECK_RE_ZY:
+				case IDC_CHECK_RE_UV:
+				case IDC_CHECK_SINGLE_MODEL:
 					if (imp)
 					{
 						int state = GetCheckBox(hWnd, wParam);
@@ -120,10 +126,10 @@ namespace Liar
 	}
 
 // ==================================== self =====================================
-	int MeshExport::ExportMesh(const char* szName)
+	int MeshExport::ExportMesh(const char*)
 	{
 		// =============== 解析材质 ==================		
-		m_meshParse->ParseNode();
+		m_meshParse->ParseNode(m_meshParse->liarPluginCfg->revertZY);
 
 		int meshSize = m_meshParse->GetMeshSize();
 		char tText[512];
@@ -160,6 +166,18 @@ namespace Liar
 			break;
 		case IDC_CHECK_UV:
 			GetMeshExport()->liarPluginCfg->exportUV = status;
+			break;
+		case IDC_CHECK_POS_NOR:
+			GetMeshExport()->liarPluginCfg->posNormalize = status;
+			break;
+		case IDC_CHECK_RE_ZY:
+			GetMeshExport()->liarPluginCfg->revertZY = status;
+			break;
+		case IDC_CHECK_RE_UV:
+			GetMeshExport()->liarPluginCfg->revertUV = status;
+			break;
+		case IDC_CHECK_SINGLE_MODEL:
+			GetMeshExport()->liarPluginCfg->singleExportModel = status;
 			break;
 		default:
 			break;

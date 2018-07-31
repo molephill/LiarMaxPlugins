@@ -151,19 +151,20 @@ namespace Liar
 			++curId;
 		}
 
+		// texture coord attribute
+		if (uv)
+		{
+			glVertexAttribPointer(curId, 2, GL_FLOAT, GL_FALSE, oneSize, (void*)uvOffSize);
+			glEnableVertexAttribArray(curId);
+			++curId;
+		}
+
 		// color attribute
 		if (color)
 		{
 			glVertexAttribPointer(curId, 3, GL_FLOAT, GL_FALSE, oneSize, (void*)colorOffSize);
 			glEnableVertexAttribArray(curId);
 			++curId;
-		}
-		
-		// texture coord attribute
-		if (uv)
-		{
-			glVertexAttribPointer(curId, 2, GL_FLOAT, GL_FALSE, oneSize, (void*)uvOffSize);
-			glEnableVertexAttribArray(curId);
 		}
 
 	}
