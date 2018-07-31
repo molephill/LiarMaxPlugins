@@ -6,7 +6,6 @@ namespace Liar
 {
 	enum LiarMeshExportType
 	{
-		INGORE_CHIRLD,
 		NORMAL_CHIRLD,
 		INDEPENDENT_CHIRLD
 	};
@@ -19,7 +18,7 @@ namespace Liar
 
 	public:
 		int meshExportType;
-		bool posNormalize
+		bool posNormalize;
 	};
 }
 

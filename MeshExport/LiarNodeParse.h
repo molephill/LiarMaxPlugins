@@ -29,11 +29,11 @@ namespace Liar
 		CMaxNullView* m_maxView;
 
 	public:
-		void ParseNode(INode*, LiarMeshParse*, int&, bool zy = true);
+		void ParseRootNode(INode*, LiarMeshParse*, bool zy = true);
 
 	private:
-		Liar::LiarMesh* ParseSubNode(INode*, LiarMeshParse*, int&, Liar::LiarMesh* p = nullptr, bool zy = true);
-		void ParseChild(INode*, LiarMeshParse*, int&, Liar::LiarMesh* p = nullptr, bool zy = true);
-		Liar::LiarMesh* ParseGeometry(INode*, LiarMeshParse*, int&, Liar::LiarMesh* p = nullptr, bool zy = true);
+		void ParseChildren(INode*, LiarMeshParse*, int&, Liar::LiarNode* p = nullptr, bool zy = true);
+		void ParseNode(INode*, LiarMeshParse*, int&, Liar::LiarNode* p = nullptr, bool zy = true);
+		void ParseGeometry(INode*, LiarMeshParse*, int&, Liar::LiarNode* p = nullptr, bool zy = true);
 	};
 }

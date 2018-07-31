@@ -26,7 +26,7 @@ namespace Liar
 		void SetControl(const TCHAR* name, ExpInterface* ei, Interface* ip, BOOL suppressPrompts, DWORD options);
 		int ParseNode(bool zy = true);
 
-	private:
+	public:
 		void EraseMeshIndex(int);
 
 	public:
@@ -39,6 +39,8 @@ namespace Liar
 
 		Liar::LiarMesh* GetOrNewMesh(int&);
 		Liar::LiarMesh* GetMesh(int);
+
+		Liar::LiarNode* rootNode;
 
 	private:
 		void ParseLiarGeometry(Liar::LiarGeometry*, Mesh*, bool zy = true);

@@ -5,16 +5,34 @@ namespace Liar
 
 	// =============================== Nodes ===============================
 
-	LiarNode::LiarNode(const char* nodeName)
-		:m_nodeName(nodeName)
+	LiarNode::LiarNode()
+		:m_nodeName(""), m_children(nullptr), meshIndex(0)
 	{
 
 	}
 
 	LiarNode::~LiarNode()
 	{
-
+		if (m_children)
+		{
+			for (std::vector<Liar::LiarNode*>::iterator it = m_children->begin(); it != m_children->end();)
+			{
+				delete (*it);
+				it = m_children->erase(it);
+			}
+			std::vector<Liar::LiarNode*>().swap(*m_children);
+			delete m_children;
+		}
 	}
+
+	Liar::LiarNode* LiarNode::AddChild()
+	{
+		if (!m_children) m_children = new std::vector<Liar::LiarNode*>();
+		Liar::LiarNode* node = new Liar::LiarNode();
+		m_children->push_back(node);
+		return node;
+	}
+
 
 	// =============================== Nodes ===============================
 

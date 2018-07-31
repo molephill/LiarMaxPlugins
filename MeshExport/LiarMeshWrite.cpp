@@ -2,48 +2,114 @@
 
 namespace Liar
 {
-	void LiarMeshWrite::WriteMesh(Liar::LiarMeshParse* parse, const char* path, unsigned int ver)
+	void LiarMeshWrite::WriteModelHierarchy(Liar::LiarMeshParse* parse, const std::string& path, unsigned int ver)
 	{
+		Liar::LiarNode* rootNode = parse->rootNode;
+		// ignore root
+
+		std::string folder, last;
+		Liar::StringUtil::GetHeadAndLast(path, folder, last, "\\");
+
+		std::string baseName, ext;
+		Liar::StringUtil::GetHeadAndLast(last, baseName, ext, ".");
+
+		char fullName[MAX_PATH];
+		sprintf_s(fullName, "%s\\%s.model", folder.c_str(), baseName.c_str());
+		FILE* hFile = fopen(fullName, "wb");
+
+		// write ver
+		fwrite(&ver, sizeof(unsigned int), 1, hFile);
+
+		// set rootNode`name = baseName;
+		rootNode->SetNodeName(baseName);
+		Liar::StringUtil::StringToLower(ext);
+
+		WriteNode(parse, rootNode, ext.c_str(), hFile);
+
+		fclose(hFile);
+	}
+
+	void LiarMeshWrite::WriteNode(Liar::LiarMeshParse* parse, Liar::LiarNode* curNode, const char* ext, FILE* hFile)
+	{
+		int size = 0;
+		std::vector<Liar::LiarNode*>* children = curNode->GetChildren();
+		if (children) size = static_cast<int>(children->size());
+		// write nodeSize;
+		fwrite(&size, sizeof(int), 1, hFile);
+		for (int i = 0; i < size; ++i)
+		{
+			char saveName[MAX_PATH];
+			Liar::LiarNode* subNode = children->at(i);
+
+			std::string& curNodeName = curNode->GetNodeName();
+			std::string& subNodeName = subNode->GetNodeName();
+
+			Liar::StringUtil::StringToLower(curNodeName);
+			Liar::StringUtil::StringToLower(subNodeName);
+
+			sprintf_s(saveName, "%s_%s.%s", curNodeName.c_str(), subNodeName.c_str(), ext);
+
+			// set mesh`s saveName
+			SetMeshSaveName(parse, subNode->meshIndex, saveName);
+
+			// write self`s name;
+			std::string szStr = saveName;
+			WriteString(szStr, hFile);
+
+			// change self`s name
+			sprintf_s(saveName, "%s_%s", curNodeName.c_str(), subNodeName.c_str());
+			subNode->SetNodeName(saveName);
+
+			// write children;
+			WriteNode(parse, subNode, ext, hFile);
+		}
+	}
+
+	void LiarMeshWrite::SetMeshSaveName(Liar::LiarMeshParse* parse, int index, const char* saveName)
+	{
+		int meshSize = parse->GetMeshSize();
+		for (int i = 0; i < meshSize; ++i)
+		{
+			if (i == index)
+			{
+				Liar::LiarMesh* mesh = parse->GetMesh(i);
+				mesh->saveName = saveName;
+				return;
+			}
+		}
+	}
+
+	void LiarMeshWrite::WriteMesh(Liar::LiarMeshParse* parse, const std::string& path, unsigned int ver)
+	{
+		// write ModelHierarchy
+		WriteModelHierarchy(parse, path, ver);
+
+		std::string folder = Liar::StringUtil::GetHead(path, "\\");
 		int meshSize = parse->GetMeshSize();
 		for (int i = 0; i < meshSize; ++i)
 		{
 			Liar::LiarMesh* mesh = parse->GetMesh(i);
 
-			std::string folder, last;
-			Liar::StringUtil::GetHeadAndLast(path, folder, last, "//");
-
-			std::string baseName, ext;
-			Liar::StringUtil::GetHeadAndLast(path, baseName, ext, ".");
-
-			Liar::StringUtil::StringToLower(baseName);
-			Liar::StringUtil::StringToLower(ext);
-
-			WriteLiarMesh(mesh, baseName.c_str(), folder.c_str(), ext.c_str(), meshSize == 1, ver);
+			WriteLiarMesh(mesh, folder.c_str(), ver);
 		}
+
+		delete parse->rootNode;
 	}
 
-	void LiarMeshWrite::WriteLiarMesh(Liar::LiarMesh* mesh, const char* baseName, const char* path, const char* ext, bool useBase, unsigned int ver)
+	void LiarMeshWrite::WriteLiarMesh(Liar::LiarMesh* mesh, const char* path, unsigned int ver)
 	{
-		std::string& meshName = mesh->meshName;
-		Liar::StringUtil::StringToLower(meshName);
-
+		std::string& meshName = mesh->saveName;
 		char fullName[MAX_PATH];
-		if (useBase)
-		{
-			sprintf_s(fullName, "%s%s.%s", path, baseName, ext);
-		}
-		else
-		{
-			sprintf_s(fullName, "%s%s_%s.%s", path, baseName, meshName.c_str(), ext);
-		}
+
+		sprintf_s(fullName, "%s\\%s", path, meshName.c_str());
 
 		FILE* hFile = fopen(fullName, "wb");
 
 		// write ver
 		fwrite(&ver, sizeof(unsigned int), 1, hFile);
 		// write mesh`s name
-		//fwrite(&meshName, sizeof(std::string), 1, hFile);
-		WriteString(meshName, hFile);
+		Liar::StringUtil::StringToLower(mesh->meshName);
+		WriteString(mesh->meshName, hFile);
 		// write mesh`s geometery
 		WriteLiarGeometery(mesh->GetGeo(), hFile);
 		// write mesh`s material

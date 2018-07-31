@@ -72,11 +72,21 @@ namespace Liar
 
 		static void GetTChar2Char(const TCHAR* name, std::string& out)
 		{
-			size_t len = wcslen(name) + 1;
+			/*size_t len = wcslen(name) + 1;
 			size_t converted = 0;
 			char tmpName[_MAX_PATH];
 			wcstombs_s(&converted, tmpName, len, name, _TRUNCATE);
-			out = tmpName;
+			out = tmpName;*/
+
+			char *pszBuf = NULL;
+			int needBytes = WideCharToMultiByte(CP_ACP, 0, name, -1, NULL, 0, NULL, NULL);
+			if (needBytes > 0) {
+				pszBuf = new char[needBytes + 1];
+				ZeroMemory(pszBuf, (needBytes + 1) * sizeof(char));
+				WideCharToMultiByte(CP_ACP, 0, name, -1, pszBuf, needBytes, NULL, NULL);
+			}
+			out = pszBuf;
+
 		}
 #endif // !PLUGINS
 

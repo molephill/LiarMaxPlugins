@@ -15,16 +15,28 @@
 
 namespace Liar
 {
-
 	class LiarNode
 	{
 	public:
-		LiarNode(const char*);
+		LiarNode();
 		~LiarNode();
 
 	private:
 		std::string m_nodeName;
-		std::std::vector<Liar::LiarNode*> m_children;
+		std::vector<Liar::LiarNode*>* m_children;
+
+	public:
+		unsigned int meshIndex;
+
+	public:
+		LiarNode* AddChild();
+
+		void SetNodeName(const char* nodeName) { m_nodeName = nodeName; };
+		void SetNodeName(const std::string& nodeName) { m_nodeName = nodeName; };
+
+		std::string& GetNodeName() { return m_nodeName; };
+
+		std::vector<Liar::LiarNode*>* GetChildren() const { return m_children; };
 	};
 
 	class LiarGeometry
@@ -80,10 +92,12 @@ namespace Liar
 
 		std::string meshName;
 
+	public:
+
 #ifdef PLUGINS
 		int vertexNum;
 		int faceNum;
-
+		std::string saveName;
 		std::string& GetMaterialName() { return m_material->name; };
 #else
 	public:

@@ -1,8 +1,79 @@
 #include "LiarMeshRead.h"
 
-
 namespace Liar
 {
+	// ======================= read model ===========================
+	Liar::Model* LiarMeshRead::ReadModel(const char* path, const char* texBasePath)
+	{
+		Liar::LiarNode* node = new Liar::LiarNode();
+		Liar::LiarMeshRead::ReadNode(path, *node);
+		Liar::Model* model = new Liar::Model();
+		ReadChildModel(*model, *node, texBasePath);
+		delete node;
+		return model;
+	}
+
+	void LiarMeshRead::ReadChildModel(Liar::Model& model, const Liar::LiarNode& node, const char* basePath)
+	{
+		std::vector<Liar::LiarNode*>* children = node.GetChildren();
+		if (children)
+		{
+			size_t size = children->size();
+			for (size_t i = 0; i < size; ++i)
+			{
+				Liar::LiarNode* subNode = children->at(i);
+				std::string& nodeName = subNode->GetNodeName();
+				model.AddMesh(nodeName, basePath);
+
+				// add child nodes
+				ReadChildModel(model, *subNode, basePath);
+			}
+		}
+	}
+	// ======================= read model ===========================
+
+	void LiarMeshRead::ReadNode(const char* path, Liar::LiarNode& node)
+	{
+		FILE* pFile;
+#ifndef __APPLE__
+		fopen_s(&pFile, path, "rb+");
+#else
+		pFile = fopen(path, "rb+");
+#endif
+		std::string basePath = path;
+		basePath = Liar::StringUtil::GetHead(basePath, "/");
+
+		unsigned int ver = 0;
+		// read version
+		fread(&ver, sizeof(unsigned int), 1, pFile);
+
+		// read root
+		basePath += "/";
+		ReadChildNode(node, basePath, pFile);
+
+		fclose(pFile);
+	}
+
+	void LiarMeshRead::ReadChildNode(Liar::LiarNode& node, std::string& basePath, FILE* pFile)
+	{
+		// read size;
+		int size = 0;
+		fread(&size, sizeof(int), 1, pFile);
+
+		for (int i = 0; i < size; ++i)
+		{
+			std::string nodeName;
+			Liar::LiarNode* subNode = node.AddChild();
+			ReadString(nodeName, pFile);
+
+			nodeName = basePath + nodeName;
+			subNode->SetNodeName(nodeName);
+
+			// read children
+			ReadChildNode(*subNode, basePath, pFile);
+		}
+	}
+
 	Liar::LiarMesh* LiarMeshRead::ReadMesh(const char* path, const char* texBasePath)
 	{
 		FILE* pFile;
@@ -21,6 +92,7 @@ namespace Liar
 			{
 				basePath = path;
 				basePath = Liar::StringUtil::GetHead(basePath, "/");
+				basePath += "/";
 			}
 			else
 			{

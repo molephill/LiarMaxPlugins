@@ -38,25 +38,16 @@ namespace Liar
 	// ==================== 解析节点 =======================
 	int LiarMeshParse::ParseNode(bool zy)
 	{
-		int numChildren = m_pInterface->GetRootNode()->NumberOfChildren();
+		INode* node = m_pInterface->GetRootNode();
+		int numChildren = node->NumberOfChildren();
 		if (numChildren > 0)
 		{
-			int curMeshIndex = 0;
 			Liar::LiarNodeParse* meshNodeParse = new Liar::LiarNodeParse();
-
-			for (int idx = 0; idx < numChildren; idx++)
-			{
-				//列举对应节点信息
-				INode* node = m_pInterface->GetRootNode()->GetChildNode(idx);
-				if (!node) continue;
-
-				meshNodeParse->ParseNode(node, this, curMeshIndex, zy);
-			}
-			EraseMeshIndex(curMeshIndex);
+			meshNodeParse->ParseRootNode(node, this, zy);
 			delete meshNodeParse;
 		}
 
-		Liar::LiarMeshWrite::WriteMesh(this, m_szExportPath.c_str(), 0);
+		Liar::LiarMeshWrite::WriteMesh(this, m_szExportPath, 0);
 
 		return 0;
 	}
@@ -231,6 +222,7 @@ namespace Liar
 	void LiarMeshParse::ParseLiarMaterial(Liar::LiarMaterial* mat, INode* node, BOOL backFace)
 	{
 		Mtl* nodemtl = node->GetMtl();
+		if (!nodemtl) return;
 		Liar::StringUtil::WChar_tToString(nodemtl->GetName(), mat->name);
 		int tTextureNum = nodemtl->NumSubTexmaps();
 		int curIndex = 0;
