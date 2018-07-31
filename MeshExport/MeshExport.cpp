@@ -85,9 +85,19 @@ INT_PTR CALLBACK MeshExportOptionsDlgProc(HWND hWnd,UINT message,WPARAM wParam,L
 						//导出场景
 						std::string tmp("");
 						Liar::StringUtil::GetWSTR2Char(szMeshName, tmp);
-						imp->ExportMesh(tmp.c_str());
+						int count = imp->ExportMesh(tmp.c_str());
+						if (count > 0)
+						{
+							MessageBox(hWnd, L"导出成功!", L"导出", MB_ICONINFORMATION);
+							CloseWindow(hWnd);
+						}
+						else
+						{
+							EndDialog(hWnd, 0);
+						}
+						return TRUE;
 					}
-					EndDialog(hWnd, IDOK);
+					DestroyWindow(hWnd);
 					return TRUE;
 				case IDC_CHECK_POS:
 				case IDC_CHECK_NORMAL:
@@ -147,7 +157,7 @@ namespace Liar
 			}
 		}
 
-		return 0;
+		return meshSize;
 	}
 
 	void MeshExport::SetExportParam(WPARAM wParam, int state)
