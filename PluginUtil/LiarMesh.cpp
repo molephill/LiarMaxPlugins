@@ -102,6 +102,17 @@ namespace Liar
 		{
 			normalSize = 0;
 		}
+		normalOffSize = positionOffSize + normalSize;
+
+		if (uv)
+		{
+			oneSize += uvSize;
+		}
+		else
+		{
+			uvSize = 0;
+		}
+		uvOffSize = normalOffSize + uvSize;
 
 		if (color)
 		{
@@ -111,13 +122,8 @@ namespace Liar
 		{
 			colorSize = 0;
 		}
-		colorOffSize = normalOffSize + normalSize;
+		colorOffSize = uvOffSize + normalSize;
 
-		if (uv)
-		{
-			oneSize += uvSize;
-			uvOffSize = colorOffSize + colorSize;
-		}
 
 		//size_t oneSize = Liar::LiarVertexBuffer::GetBuffSize();
 		size_t totalSize = m_bufferSize * oneSize;
@@ -129,8 +135,8 @@ namespace Liar
 			Liar::LiarVertexBuffer* buffData = m_allVertexBuffers->at(i);
 			glBufferSubData(GL_ARRAY_BUFFER, start + positionOffSize, positionSize, buffData->position);
 			if (normal) glBufferSubData(GL_ARRAY_BUFFER, start + normalOffSize, normalSize, buffData->normal);
-			if (color) glBufferSubData(GL_ARRAY_BUFFER, start + colorOffSize, colorSize, buffData->color);
 			if (uv) glBufferSubData(GL_ARRAY_BUFFER, start + uvOffSize, uvSize, buffData->uv);
+			if (color) glBufferSubData(GL_ARRAY_BUFFER, start + colorOffSize, colorSize, buffData->color);
 		}
 
 		size_t indiceSize1 = GetIndicesSize() * sizeof(unsigned int);
@@ -164,7 +170,6 @@ namespace Liar
 		{
 			glVertexAttribPointer(curId, 3, GL_FLOAT, GL_FALSE, oneSize, (void*)colorOffSize);
 			glEnableVertexAttribArray(curId);
-			++curId;
 		}
 
 	}
