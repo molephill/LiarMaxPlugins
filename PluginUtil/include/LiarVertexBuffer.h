@@ -22,6 +22,15 @@ namespace Liar
 		Liar::Vector3D* color;
 		Liar::Vector2D* uv;
 
+		friend std::ostream& operator<<(std::ostream& os, const Liar::LiarVertexBuffer& m)
+		{
+			if (m.position) os << "position: " << *(m.position) << "\n";
+			if (m.normal) os << "normal: " << *(m.normal) << "\n";
+			if (m.color) os << "color: " << *(m.color) << "\n";
+			if (m.uv) os << "uv: " << *(m.uv) << "\n";
+			return os;
+		}
+
 #ifndef PLUGINS
 	public:
 		static size_t GetPositionSize() { return sizeof(Liar::Vector3D); };

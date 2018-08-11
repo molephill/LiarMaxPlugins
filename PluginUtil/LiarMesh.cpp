@@ -66,6 +66,27 @@ namespace Liar
 		}
 	}
 
+	std::ostream& operator<<(std::ostream& os, const Liar::LiarGeometry& m)
+	{
+		os << "buffSize: " << m.m_bufferSize << "\n";
+		for (int i = 0; i < m.m_bufferSize; ++i)
+		{
+			os << "buffer index: " << i << "\nbuffer info: " << *(m.m_allVertexBuffers->at(i)) << "\n";
+		}
+
+		int indicesSize = m.m_indices->size();
+		os << "indicesSize: " << indicesSize << "\n";
+		for (int i = 0; i < indicesSize; ++i)
+		{
+			if (i > 0 && i % 3 == 0)
+			{
+				os << "\n";
+			}
+			os << m.m_indices->at(i) << ",";
+		}
+		return os;
+	}
+
 #ifndef PLUGINS
 	void LiarGeometry::Upload()
 	{
@@ -200,6 +221,13 @@ namespace Liar
 	{
 		delete m_geometry;
 		delete m_material;
+	}
+
+	std::ostream& operator<<(std::ostream& os, const Liar::LiarMesh& m)
+	{
+		os << "mesh`s name: " << m.meshName << "\n";
+		os << "geometory:\n" << *m.m_geometry << "\n";
+		return os;
 	}
 
 #ifndef PLUGINS

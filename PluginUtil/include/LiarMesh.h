@@ -69,6 +69,8 @@ namespace Liar
 		void EraseIndexBuff(int);
 
 		void SetVertexOpen(int v) { m_vertexOpen = v; };
+
+		friend std::ostream& operator<<(std::ostream& os, const Liar::LiarGeometry& m);
         
 #ifndef PLUGINS
     public:
@@ -99,6 +101,8 @@ namespace Liar
 		std::string meshName;
 
 	public:
+
+		friend std::ostream& operator<<(std::ostream& os, const Liar::LiarMesh& m);
 
 #ifdef PLUGINS
 		int vertexNum;
